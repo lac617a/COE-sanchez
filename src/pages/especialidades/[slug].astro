@@ -1,12 +1,12 @@
 ---
 import { ArrowUpRight, Check, ChevronDown, MessageCircle, Phone } from "lucide-react";
 
-import bracesPhoto from "@/assets/brand/ortodoncia-brackets.jpg";
 import ArrowLink from "@/components/landing/ArrowLink.astro";
 import PageHero from "@/components/landing/PageHero.astro";
 import PhotoSlot from "@/components/landing/PhotoSlot.astro";
 import ServiceCard from "@/components/landing/ServiceCard.astro";
 import ServiceIcon from "@/components/landing/ServiceIcon.astro";
+import { SERVICE_PHOTOS } from "@/data/photos";
 import { CATEGORIES, services } from "@/data/services";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { getGuides, GUIDES_BASE } from "@/lib/guides";
@@ -36,10 +36,7 @@ const guides = service.guides
 const others = services.filter(
   (item) => item.category === service.category && item.slug !== service.slug,
 );
-// Única foto real disponible por ahora: la de brackets, solo para ortodoncia con brackets.
-const photo = ["ortodoncia-convencional", "ortodoncia-autoligado"].includes(service.slug)
-  ? bracesPhoto
-  : undefined;
+const photo = SERVICE_PHOTOS[service.slug];
 ---
 
 <BaseLayout
@@ -68,14 +65,7 @@ const photo = ["ortodoncia-convencional", "ortodoncia-autoligado"].includes(serv
 
     <!-- En la referencia aquí va un formulario; usamos WhatsApp para no recoger datos personales. -->
     <div slot="aside" class="grid gap-4">
-      <PhotoSlot
-        src={photo}
-        alt={photo ? "Brackets con arco y ligas de color." : ""}
-        label={service.title}
-        tone="dark"
-        class="aspect-[16/10]"
-        eager
-      />
+      <PhotoSlot {...photo} label={service.title} tone="dark" class="aspect-[16/10]" eager />
       <div class="rounded-[var(--radius-card)] border border-line-inverse bg-white/5 p-6 backdrop-blur-sm">
         <p class="font-display text-2xl">Hable con un especialista</p>
         <p class="mt-1 text-ink-inverse-muted">Escríbanos y le ayudamos a agendar su valoración.</p>

@@ -1,14 +1,13 @@
 ---
-import { ArrowUpRight, FlaskConical, Play, ScanLine, Smile, UsersRound } from "lucide-react";
+import { ArrowUpRight, FlaskConical, ScanLine, Smile, UsersRound } from "lucide-react";
 
-import logoFull from "@/assets/brand/logo-full.png";
-import bracesPhoto from "@/assets/brand/ortodoncia-brackets.jpg";
 import InstagramIcon from "@/components/icons/InstagramIcon.astro";
 import { ArcLine } from "@/components/illustrations/decor";
 import ArrowLink from "@/components/landing/ArrowLink.astro";
 import HeroCarousel from "@/components/landing/HeroCarousel.astro";
 import PhotoSlot from "@/components/landing/PhotoSlot.astro";
 import ServicesArc from "@/components/landing/ServicesArc.astro";
+import { PHOTOS } from "@/data/photos";
 import { services } from "@/data/services";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { clinic } from "@/lib/content";
@@ -83,11 +82,13 @@ function initials(name: string): string {
         </ArrowLink>
       </div>
       <div class="self-end overflow-hidden pt-4 md:pt-10">
-        <div class="translate-y-[12%]">
+        <div class="translate-y-[10%]">
           <HeroCarousel
             slides={[
-              { src: bracesPhoto, alt: "Sonrisa con brackets metálicos y ligas de color." },
-              { src: logoFull, alt: `${clinic.brandMark}: ${clinic.tagline}`, fit: "contain" },
+              PHOTOS.pacienteOrtodoncia,
+              PHOTOS.sonrisaEstetica,
+              PHOTOS.pacienteEstetica,
+              PHOTOS.brackets,
             ]}
           />
         </div>
@@ -116,9 +117,24 @@ function initials(name: string): string {
 
     <div class="mx-auto mt-10 max-w-[53rem]">
       <div class="grid grid-cols-[1fr_1.35fr_1fr] items-start gap-3 px-[4%] sm:gap-6">
-        <PhotoSlot label="atención en consulta" class="mt-8 aspect-[8/9]" />
-        <PhotoSlot label="laboratorio y tecnología 3D" class="aspect-[282/260]" />
-        <PhotoSlot label="el equipo de la clínica" class="mt-8 aspect-[8/9]" />
+        <PhotoSlot
+          {...PHOTOS.drJose}
+          label="Dr. José David Quintero"
+          class="mt-8 aspect-[8/9]"
+          sizes="(min-width: 768px) 15rem, 30vw"
+        />
+        <PhotoSlot
+          {...PHOTOS.sonrisaEstetica}
+          label="sonrisa"
+          class="aspect-[282/260]"
+          sizes="(min-width: 768px) 20rem, 40vw"
+        />
+        <PhotoSlot
+          {...PHOTOS.draLorena}
+          label="Dra. Lorena Sánchez"
+          class="mt-8 aspect-[8/9]"
+          sizes="(min-width: 768px) 15rem, 30vw"
+        />
       </div>
       <div class="relative -mt-8 rounded-[1.25rem] bg-black px-6 pt-14 pb-10 text-center text-white sm:-mt-14 sm:px-14 sm:pt-20">
         <h3 class="section-title text-white">Especialistas en ortodoncia y diseño de sonrisa</h3>
@@ -211,16 +227,11 @@ function initials(name: string): string {
       </div>
       <div class="relative">
         <PhotoSlot
-          label="video o foto de la clínica"
+          {...PHOTOS.sonrisaIntraoral}
+          label="sonrisa intraoral"
           tone="dark"
           class="aspect-[4/3.2] !rounded-[1.25rem_1.25rem_1.25rem_12.5rem]"
         />
-        <span
-          aria-hidden="true"
-          class="absolute top-1/2 left-1/2 grid size-14 -translate-1/2 place-items-center rounded-full bg-white/90 text-ink"
-        >
-          <Play className="size-6 translate-x-0.5 fill-current" />
-        </span>
       </div>
     </div>
   </section>

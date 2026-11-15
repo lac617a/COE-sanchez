@@ -19,6 +19,8 @@ type Props = {
   tone?: "light" | "dark";
   sizes?: string;
   eager?: boolean;
+  /** Encuadre de la foto (object-position), p. ej. "20% 50%" para recortar un lado. */
+  position?: string;
 };
 
 const {
@@ -29,7 +31,9 @@ const {
   tone = "light",
   sizes,
   eager = false,
+  position = "50% 50%",
 } = Astro.props;
+const widths = [400, 700, 1000].filter((width) => !src || width <= src.width);
 const showLabel = import.meta.env.DEV;
 ---
 
@@ -38,10 +42,11 @@ const showLabel = import.meta.env.DEV;
     <Image
       src={src}
       alt={alt}
-      widths={[400, 700, 1000]}
+      widths={widths.length > 0 ? widths : [src.width]}
       sizes={sizes ?? "(min-width: 768px) 40vw, 90vw"}
       loading={eager ? "eager" : "lazy"}
       class="absolute inset-0 h-full w-full object-cover"
+      style={{ objectPosition: position }}
     />
   ) : (
     <div

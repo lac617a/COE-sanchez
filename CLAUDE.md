@@ -64,6 +64,8 @@ src/
 
 ## Fotos
 
+Fotos de la clínica en `src/assets/fotos` y su uso en `src/data/photos.ts` (`PHOTOS` y `SERVICE_PHOTOS`). Las de Instagram se recortaron para quitar el disfraz de Halloween y las fotos comparativas (no se publica antes y después). **Las fotos de pacientes necesitan su autorización escrita** antes de publicar.
+
 `PhotoSlot` muestra un hueco con el mismo marco mientras no haya foto; en desarrollo dice qué foto falta. Solo fotos reales de la clínica y con permiso de quien aparece. **No usar fotos de stock.** Las fotos van en `src/assets/` y se pasan con `src={...}`.
 
 ## Reglas de contenido (críticas)

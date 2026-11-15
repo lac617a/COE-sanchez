@@ -14,10 +14,18 @@ import {
 import logoFull from "@/assets/brand/logo-full.png";
 import PageHero from "@/components/landing/PageHero.astro";
 import PhotoSlot from "@/components/landing/PhotoSlot.astro";
+import { PHOTOS } from "@/data/photos";
+import type { Photo } from "@/data/photos";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { clinic } from "@/lib/content";
 import { breadcrumbJsonLd, dentistJsonLd } from "@/lib/seo";
 import { clinicAddressLine, clinicMapsUrl, clinicPhoneUrl, clinicWhatsappUrl } from "@/lib/site";
+
+/** Foto de cada especialista, por nombre (src/data/clinic.json). */
+const DOCTOR_PHOTOS: Record<string, Photo> = {
+  "Dra. Lorena Sánchez Lázaro": PHOTOS.draLorena,
+  "Dr. José David Quintero": PHOTOS.drJose,
+};
 
 const whatsappUrl = clinicWhatsappUrl();
 const phoneUrl = clinicPhoneUrl();
@@ -69,9 +77,11 @@ const VALUES = [
     </p>
     <PhotoSlot
       slot="aside"
-      label="fachada o recepción de la clínica"
+      {...PHOTOS.drJose}
+      label="el equipo en consulta"
       tone="dark"
       class="aspect-[4/3]"
+      eager
     />
   </PageHero>
 
@@ -83,9 +93,14 @@ const VALUES = [
     </h2>
     <ul class="mt-10 grid gap-6 md:grid-cols-2">
       {clinic.doctors.map((doctor) => (
-        <li class="card-soft overflow-hidden p-3">
-          <PhotoSlot label={doctor.name} class="aspect-[4/3] rounded-[1.25rem]" />
-          <div class="p-4 sm:p-6">
+        <li class="card-gray flex gap-4 overflow-hidden p-3 sm:gap-6">
+          <PhotoSlot
+            {...DOCTOR_PHOTOS[doctor.name]}
+            label={doctor.name}
+            class="aspect-[9/16] w-32 shrink-0 rounded-[1rem] sm:w-44"
+            sizes="11rem"
+          />
+          <div class="self-center py-4 pr-2">
             <h3 class="font-display text-3xl font-normal">{doctor.name}</h3>
             <p class="mt-1 text-ink-muted">{doctor.specialty}</p>
           </div>
