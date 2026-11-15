@@ -17,7 +17,7 @@ Las rutas antiguas de la guía (`/cepillado`, `/urgencias`…) redirigen a `/gui
 - **Cabecera:** logo y botón de menú, que abre un menú lateral blanco. Es transparente sobre las portadas oscuras.
 - **Títulos de sección:** Nunito Sans negrita de 32 px (`.section-title`). La serif solo se usa en los titulares grandes (`.display-title`) y en el pie.
 - **Texto base:** 16 px en la landing y 18 px en las guías (`data-area="guias"` en `<html>`).
-- **Componentes:** botones píldora de contorno con ↗ (`ArrowLink`), tarjetas grises (`.card-gray`) y especialidades en arco (`ServicesArc`). El pie es blanco.
+- **Componentes:** botones píldora de contorno con ↗ (`ArrowLink`), tarjetas grises (`.card-gray`) y carrusel de especialidades (`ServicesCarousel`: 4 a la vista, avance cada 5 s, bucle infinito, arrastre). El pie es blanco.
 - **Guías en la landing:** tienen poca presencia a propósito. Solo aparecen en el menú, en el pie y en un aviso pequeño en las especialidades de ortodoncia.
 - **Instagram de la clínica:** @od.sanchezquintero. AlineaPro tiene su propia cuenta: @alineaprodental.
 

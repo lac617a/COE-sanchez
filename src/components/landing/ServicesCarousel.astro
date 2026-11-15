@@ -1,0 +1,206 @@
+---
+import ServiceCard from "@/components/landing/ServiceCard.astro";
+
+import type { Service } from "@/data/services";
+
+/**
+ * Carrusel de especialidades, como el de la referencia (Swiper): 4 tarjetas a la vista en
+ * escritorio, 3 en tableta y 1 en el celular; avanza solo cada 5 s, en bucle infinito,
+ * sin flechas. Se arrastra con el dedo o el ratón.
+ * Accesibilidad: se detiene con el puntero encima o con el foco dentro, y no avanza solo
+ * con "reducir movimiento". Sin JavaScript queda una fila que se desliza con scroll.
+ */
+type Props = { services: Service[] };
+
+const { services } = Astro.props;
+---
+
+<div class="services-carousel" data-carousel>
+  <div class="container-page">
+    <div
+      class="carousel-viewport overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      data-viewport
+    >
+      <ul class="carousel-track flex" aria-label="Especialidades" data-track>
+        {services.map((service) => (
+          <li class="carousel-slide shrink-0" data-slide>
+            <ServiceCard service={service} />
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<style>
+  .services-carousel {
+    --per-view: 1;
+    --gap: 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .services-carousel {
+      --per-view: 2;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .services-carousel {
+      --per-view: 3;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .services-carousel {
+      --per-view: 4;
+    }
+  }
+
+  .carousel-track {
+    gap: var(--gap);
+  }
+
+  .carousel-slide {
+    width: calc((100% - (var(--per-view) - 1) * var(--gap)) / var(--per-view));
+  }
+
+  /* Con JavaScript: las tarjetas de los lados se ven fuera del contenedor, como en la referencia. */
+  .services-carousel[data-ready] .carousel-viewport {
+    overflow: visible;
+    touch-action: pan-y;
+    cursor: grab;
+  }
+
+  .services-carousel[data-ready] .carousel-viewport:active {
+    cursor: grabbing;
+  }
+
+  .services-carousel[data-ready] .carousel-track {
+    will-change: transform;
+  }
+</style>
+
+<script>
+  const AUTOPLAY_MS = 5000;
+  const SPEED_MS = 500;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  for (const root of document.querySelectorAll<HTMLElement>("[data-carousel]")) {
+    const viewport = root.querySelector<HTMLElement>("[data-viewport]")!;
+    const track = root.querySelector<HTMLElement>("[data-track]")!;
+    const originals = [...track.querySelectorAll<HTMLElement>("[data-slide]")];
+    const count = originals.length;
+    if (count < 2) continue;
+
+    // Bucle infinito: una copia de todas las tarjetas a cada lado. Se pueden tocar (a veces
+    // quedan a la vista), pero se ocultan a lectores de pantalla y al tabulador.
+    const clone = (slide: HTMLElement) => {
+      const copy = slide.cloneNode(true) as HTMLElement;
+      copy.setAttribute("aria-hidden", "true");
+      copy
+        .querySelectorAll("a, button")
+        .forEach((element) => element.setAttribute("tabindex", "-1"));
+      return copy;
+    };
+    track.prepend(...originals.map(clone));
+    track.append(...originals.map(clone));
+    root.setAttribute("data-ready", "");
+    viewport.scrollLeft = 0;
+
+    const slides = [...track.querySelectorAll<HTMLElement>("[data-slide]")];
+    let index = count; // primera tarjeta original
+    let step = 0;
+    let dragX: number | null = null;
+    let dragDelta = 0;
+    let moved = false;
+
+    const measure = () => {
+      step = slides[1].offsetLeft - slides[0].offsetLeft;
+    };
+    const place = (animate: boolean, offset = 0) => {
+      track.style.transition = animate ? `transform ${SPEED_MS}ms ease` : "none";
+      track.style.transform = `translate3d(${-index * step + offset}px, 0, 0)`;
+    };
+    const go = (next: number) => {
+      index = next;
+      place(true);
+    };
+    // Al terminar la animación, si salimos de las originales, saltamos sin animar a su gemela.
+    track.addEventListener("transitionend", () => {
+      if (index >= count * 2) index -= count;
+      else if (index < count) index += count;
+      else return;
+      place(false);
+    });
+
+    measure();
+    place(false);
+    window.addEventListener("resize", () => {
+      measure();
+      place(false);
+    });
+
+    // Avance automático.
+    let timer: number | undefined;
+    let paused = false;
+    const start = () => {
+      if (reduceMotion) return;
+      window.clearInterval(timer);
+      timer = window.setInterval(() => {
+        if (!paused && !document.hidden && dragX === null) go(index + 1);
+      }, AUTOPLAY_MS);
+    };
+    root.addEventListener("pointerenter", () => (paused = true));
+    root.addEventListener("pointerleave", () => (paused = false));
+    root.addEventListener("focusin", (event) => {
+      paused = true;
+      // Lleva a la vista la tarjeta que recibe el foco con el teclado.
+      const slide = (event.target as HTMLElement).closest<HTMLElement>("[data-slide]");
+      const position = slide ? slides.indexOf(slide) : -1;
+      if (position >= 0 && (position < index || position >= index + perView())) go(position);
+    });
+    root.addEventListener("focusout", () => (paused = false));
+    const perView = () => Number(getComputedStyle(root).getPropertyValue("--per-view").trim()) || 1;
+
+    // Arrastre con el dedo o el ratón.
+    viewport.addEventListener("pointerdown", (event) => {
+      if (event.pointerType === "mouse" && event.button !== 0) return;
+      dragX = event.clientX;
+      dragDelta = 0;
+      moved = false;
+      viewport.setPointerCapture(event.pointerId);
+    });
+    viewport.addEventListener("pointermove", (event) => {
+      if (dragX === null) return;
+      dragDelta = event.clientX - dragX;
+      if (Math.abs(dragDelta) > 6) moved = true;
+      place(false, dragDelta);
+    });
+    const endDrag = () => {
+      if (dragX === null) return;
+      dragX = null;
+      const threshold = Math.min(80, step / 4);
+      if (dragDelta < -threshold) go(index + Math.max(1, Math.round(-dragDelta / step)));
+      else if (dragDelta > threshold) go(index - Math.max(1, Math.round(dragDelta / step)));
+      else place(true);
+      start(); // reinicia la cuenta tras interactuar
+    };
+    viewport.addEventListener("pointerup", endDrag);
+    viewport.addEventListener("pointercancel", endDrag);
+    // Si se arrastró, el clic no abre la tarjeta.
+    viewport.addEventListener(
+      "click",
+      (event) => {
+        if (moved) {
+          event.preventDefault();
+          event.stopPropagation();
+          moved = false;
+        }
+      },
+      true,
+    );
+    viewport.addEventListener("dragstart", (event) => event.preventDefault());
+
+    start();
+  }
+</script>

@@ -6,7 +6,7 @@ import { ArcLine } from "@/components/illustrations/decor";
 import ArrowLink from "@/components/landing/ArrowLink.astro";
 import HeroCarousel from "@/components/landing/HeroCarousel.astro";
 import PhotoSlot from "@/components/landing/PhotoSlot.astro";
-import ServicesArc from "@/components/landing/ServicesArc.astro";
+import ServicesCarousel from "@/components/landing/ServicesCarousel.astro";
 import { PHOTOS } from "@/data/photos";
 import { services } from "@/data/services";
 import BaseLayout from "@/layouts/BaseLayout.astro";
@@ -96,7 +96,7 @@ function initials(name: string): string {
     </div>
   </section>
 
-  <!-- Presentación -->
+  <!-- Presentación: tres fotos encima del bloque negro; la del centro, en arco, baja dentro de él -->
   <section aria-labelledby="presentacion" class="container-page pt-16 pb-16 sm:pt-20 sm:pb-24">
     <h2 id="presentacion" class="display-title text-center text-ink">
       Ortodoncia y estética dental en Bucaramanga.
@@ -115,30 +115,32 @@ function initials(name: string): string {
       ></path>
     </svg>
 
-    <div class="mx-auto mt-10 max-w-[53rem]">
-      <div class="grid grid-cols-[1fr_1.35fr_1fr] items-start gap-3 px-[4%] sm:gap-6">
+    <div class="intro-cluster mt-6">
+      <div class="intro-photos relative z-10 flex items-start justify-center">
         <PhotoSlot
           {...PHOTOS.drJose}
           label="Dr. José David Quintero"
-          class="mt-8 aspect-[8/9]"
-          sizes="(min-width: 768px) 15rem, 30vw"
+          class="intro-side"
+          sizes="(min-width: 768px) 13rem, 25vw"
         />
         <PhotoSlot
           {...PHOTOS.sonrisaEstetica}
           label="sonrisa"
-          class="aspect-[282/260]"
-          sizes="(min-width: 768px) 20rem, 40vw"
+          class="intro-middle"
+          sizes="(min-width: 768px) 25rem, 46vw"
         />
         <PhotoSlot
           {...PHOTOS.draLorena}
           label="Dra. Lorena Sánchez"
-          class="mt-8 aspect-[8/9]"
-          sizes="(min-width: 768px) 15rem, 30vw"
+          class="intro-side"
+          sizes="(min-width: 768px) 13rem, 25vw"
         />
       </div>
-      <div class="relative -mt-8 rounded-[1.25rem] bg-black px-6 pt-14 pb-10 text-center text-white sm:-mt-14 sm:px-14 sm:pt-20">
-        <h3 class="section-title text-white">Especialistas en ortodoncia y diseño de sonrisa</h3>
-        <p class="mx-auto mt-4 max-w-2xl text-[0.9375rem] leading-relaxed text-white/90">
+      <div class="intro-card rounded-[1.25rem] bg-black px-6 pb-10 text-center text-white sm:px-14">
+        <h3 class="section-title text-white sm:text-[2.5rem]">
+          Especialistas en ortodoncia y diseño de sonrisa
+        </h3>
+        <p class="mx-auto mt-4 max-w-3xl text-[0.9375rem] leading-relaxed text-white/90">
           La clínica lleva el nombre de sus especialistas: la Dra. Lorena Sánchez Lázaro y el Dr.
           José David Quintero. Con laboratorio propio y tecnología 3D, diseñamos y fabricamos en la
           clínica buena parte de lo que usa su tratamiento.
@@ -150,22 +152,87 @@ function initials(name: string): string {
     </div>
   </section>
 
-  <!-- Especialidades -->
-  <section aria-labelledby="especialidades" class="relative isolate overflow-hidden pb-10 sm:pb-16">
+  <style>
+    /*
+     * Medidas de la referencia (en % del ancho, para que escale): foto central de 400 × 340 en arco
+     * (54 px arriba, redonda abajo) y laterales de 200 × 225. Las laterales entran un 26 % de su
+     * alto en el bloque negro y la central baja hasta casi el título del bloque.
+     */
+    .intro-cluster {
+      --mid-w: 46%;
+      --side-w: 25%;
+      --side-top: 5%;
+      --gap: 2%;
+    }
+
+    @media (min-width: 768px) {
+      .intro-cluster {
+        --mid-w: 31%;
+        --side-w: 15.5%;
+        --side-top: 2.4%;
+      }
+    }
+
+    .intro-photos {
+      gap: var(--gap);
+    }
+
+    .intro-photos :global(.intro-side) {
+      width: var(--side-w);
+      aspect-ratio: 200 / 225;
+      margin-top: var(--side-top);
+      border-radius: 1.75rem;
+      flex-shrink: 0;
+    }
+
+    .intro-photos :global(.intro-middle) {
+      width: var(--mid-w);
+      aspect-ratio: 400 / 340;
+      border-radius: 54px 54px 400px 400px;
+      flex-shrink: 0;
+    }
+
+    /* El bloque empieza donde las laterales llevan el 74 % de su alto. */
+    .intro-card {
+      position: relative;
+      margin-top: calc(var(--side-top) + var(--side-w) * 0.8325 - var(--mid-w) * 0.85);
+      padding-top: calc(var(--mid-w) * 0.85 - var(--side-top) - var(--side-w) * 0.8325 + 2rem);
+    }
+  </style>
+
+  <!-- Especialidades: carrusel sobre medio círculo de línea fina, como la referencia -->
+  <section
+    aria-labelledby="especialidades"
+    class="relative isolate overflow-hidden bg-[#fbfbfb] pt-10 pb-20 sm:pt-14 sm:pb-28"
+  >
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 1000 500"
+      preserveAspectRatio="xMidYMax meet"
+      fill="none"
+      class="pointer-events-none absolute inset-x-0 bottom-4 -z-10 h-full w-full text-ink/70"
+    >
+      <path
+        d="M1 0 A 499 499 0 0 0 999 0"
+        stroke="currentColor"
+        stroke-width="1"
+        vector-effect="non-scaling-stroke"
+      ></path>
+    </svg>
     <div class="container-page flex flex-wrap items-start justify-between gap-6">
       <div class="max-w-xl">
-        <h2 id="especialidades" class="section-title">
+        <h2 id="especialidades" class="section-title sm:text-[2.5rem]">
           Nuestras especialidades
         </h2>
-        <p class="mt-4 text-[0.9375rem] text-[#333]">
+        <p class="mt-4 text-base text-[#333]">
           Tratamientos diseñados para cada necesidad, con la tecnología y el laboratorio de la
           clínica.
         </p>
       </div>
       <ArrowLink href="/especialidades">Todas las especialidades</ArrowLink>
     </div>
-    <div class="mt-10">
-      <ServicesArc services={services} />
+    <div class="mt-10 sm:mt-12">
+      <ServicesCarousel services={services} />
     </div>
   </section>
 

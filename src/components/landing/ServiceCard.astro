@@ -3,7 +3,10 @@ import ServiceIcon from "@/components/landing/ServiceIcon.astro";
 
 import type { Service } from "@/data/services";
 
-/** Tarjeta gris de especialidad, como la de la referencia: icono, título y frase. */
+/**
+ * Tarjeta de especialidad, como la de la referencia: alta (290 × 400), gris con textura,
+ * icono en un cuadro blanco arriba y título y frase abajo. Toda la tarjeta es el enlace.
+ */
 type Props = { service: Service; class?: string };
 
 const { service, class: className } = Astro.props;
@@ -11,22 +14,33 @@ const { service, class: className } = Astro.props;
 
 <article
   class:list={[
-    "card-gray group relative flex h-full min-h-[18rem] flex-col p-4 transition-shadow hover:shadow-[var(--shadow-soft)] sm:min-h-[20.5rem]",
+    "service-card group relative flex aspect-[29/40] h-full flex-col justify-between rounded-[1.25rem] p-6 transition-shadow select-none hover:shadow-[var(--shadow-soft)]",
     className,
   ]}
 >
-  <span class="icon-chip">
-    <ServiceIcon icon={service.icon} class="size-5" />
+  <span class="grid size-12 place-items-center rounded-[0.625rem] bg-white text-ink">
+    <ServiceIcon icon={service.icon} class="size-6" />
   </span>
-  <div class="mt-auto pt-10">
-    <h3 class="text-lg font-bold text-ink">
+  <div class="pb-[14%]">
+    <h3 class="text-xl leading-tight font-bold text-ink">
       <a
         href={`/especialidades/${service.slug}`}
+        draggable="false"
         class="no-underline after:absolute after:inset-0 after:rounded-[1.25rem] after:content-[''] group-hover:underline"
       >
         {service.title}
       </a>
     </h3>
-    <p class="mt-2 text-[0.9375rem] leading-snug text-[#333]">{service.summary}</p>
+    <p class="mt-2 text-base leading-snug text-[#333]">{service.summary}</p>
   </div>
 </article>
+
+<style>
+  /* Gris claro con textura suave, como las fotos de fondo de las tarjetas de la referencia. */
+  .service-card {
+    background-color: #ececec;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+      linear-gradient(160deg, #f5f5f5 0%, #e6e6e6 100%);
+  }
+</style>
