@@ -11,7 +11,15 @@ Sitio web completo de la **Clínica Odontológica Sánchez Quintero** (marca del
 
 Las rutas antiguas de la guía (`/cepillado`, `/urgencias`…) redirigen a `/guias/…` (ver `redirects` en `astro.config.mjs`).
 
-**Referencia visual:** [coedental.pe](https://coedental.pe/). Se toma solo el lenguaje visual y la estructura de secciones: portada negra con grano, títulos serif en cursiva, tarjetas grises redondeadas, botones píldora con flecha ↗ y bloques negros con cifras. **Nunca** se copian sus textos, fotos, cifras ni testimonios.
+**Referencia visual:** [coedental.pe](https://coedental.pe/). La landing sigue su diseño y su orden de secciones lo más fielmente posible. **Nunca** se copian sus textos, fotos, cifras ni testimonios.
+
+- **Portada:** textura de luz (`public/images/hero-bg.webp`) y titular en DM Serif cursiva. A la derecha va un carrusel circular con fotos en forma de arco (`HeroCarousel`).
+- **Cabecera:** logo y botón de menú, que abre un menú lateral blanco. Es transparente sobre las portadas oscuras.
+- **Títulos de sección:** Nunito Sans negrita de 32 px (`.section-title`). La serif solo se usa en los titulares grandes (`.display-title`) y en el pie.
+- **Texto base:** 16 px en la landing y 18 px en las guías (`data-area="guias"` en `<html>`).
+- **Componentes:** botones píldora de contorno con ↗ (`ArrowLink`), tarjetas grises (`.card-gray`) y especialidades en arco (`ServicesArc`). El pie es blanco.
+- **Guías en la landing:** tienen poca presencia a propósito. Solo aparecen en el menú, en el pie y en un aviso pequeño en las especialidades de ortodoncia.
+- **Instagram de la clínica:** @od.sanchezquintero. AlineaPro tiene su propia cuenta: @alineaprodental.
 
 ## Stack
 

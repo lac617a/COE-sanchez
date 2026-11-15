@@ -1,0 +1,72 @@
+---
+import ServiceCard from "@/components/landing/ServiceCard.astro";
+
+import type { Service } from "@/data/services";
+
+/**
+ * Carrusel de especialidades en arco, como en la referencia: las tarjetas bajan hacia el
+ * centro siguiendo una curva y detrás corre una línea fina. Se desliza con el dedo o la rueda.
+ */
+type Props = { services: Service[] };
+
+const { services } = Astro.props;
+---
+
+<div class="relative" data-services-arc>
+  <svg
+    aria-hidden="true"
+    viewBox="0 0 1200 400"
+    preserveAspectRatio="none"
+    class="pointer-events-none absolute inset-x-0 top-6 -z-10 h-[115%] w-full text-ink/30"
+    fill="none"
+  >
+    <path
+      d="M-20 40 Q 600 560 1220 40"
+      stroke="currentColor"
+      stroke-width="1.25"
+      vector-effect="non-scaling-stroke"
+    ></path>
+  </svg>
+  <ul
+    class="flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pt-2 pb-16 [scrollbar-width:none] sm:px-[max(1.5rem,calc((100vw-72rem)/2+1.5rem))] [&::-webkit-scrollbar]:hidden"
+    aria-label="Especialidades (deslice para ver más)"
+    data-arc-track
+  >
+    {services.map((service) => (
+      <li
+        class="w-[16.8rem] shrink-0 snap-center transition-transform duration-200 ease-out"
+        data-arc-item
+      >
+        <ServiceCard service={service} />
+      </li>
+    ))}
+  </ul>
+</div>
+
+<script>
+  // Baja cada tarjeta según su distancia al centro de la pantalla (curva parabólica).
+  for (const root of document.querySelectorAll<HTMLElement>("[data-services-arc]")) {
+    const track = root.querySelector<HTMLElement>("[data-arc-track]");
+    const items = [...root.querySelectorAll<HTMLElement>("[data-arc-item]")];
+    if (!track) continue;
+    let frame = 0;
+    const layout = () => {
+      frame = 0;
+      const center = window.innerWidth / 2;
+      for (const item of items) {
+        const rect = item.getBoundingClientRect();
+        const distance = (rect.left + rect.width / 2 - center) / window.innerWidth;
+        const drop = Math.max(0, 1 - 4 * distance * distance) * 2.5; // rem
+        item.style.translate = `0 ${drop.toFixed(2)}rem`;
+      }
+    };
+    const schedule = () => (frame ||= requestAnimationFrame(layout));
+    track.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    // Empieza con las tarjetas centradas en la segunda, como la referencia.
+    if (items[1] && window.innerWidth >= 768) {
+      track.scrollLeft = items[1].offsetLeft - (track.clientWidth - items[1].clientWidth) / 2;
+    }
+    layout();
+  }
+</script>

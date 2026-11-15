@@ -12,12 +12,10 @@ import {
 } from "lucide-react";
 
 import logoFull from "@/assets/brand/logo-full.png";
-import ArrowLink from "@/components/landing/ArrowLink.astro";
 import PageHero from "@/components/landing/PageHero.astro";
 import PhotoSlot from "@/components/landing/PhotoSlot.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { clinic } from "@/lib/content";
-import { GUIDES_BASE } from "@/lib/guides";
 import { breadcrumbJsonLd, dentistJsonLd } from "@/lib/seo";
 import { clinicAddressLine, clinicMapsUrl, clinicPhoneUrl, clinicWhatsappUrl } from "@/lib/site";
 
@@ -80,7 +78,7 @@ const VALUES = [
   <!-- Equipo -->
   <section aria-labelledby="equipo" class="container-page py-16 sm:py-24">
     <p class="eyebrow">Nuestro equipo</p>
-    <h2 id="equipo" class="mt-2 text-4xl sm:text-5xl">
+    <h2 id="equipo" class="section-title mt-2">
       Los especialistas detrás de su sonrisa
     </h2>
     <ul class="mt-10 grid gap-6 md:grid-cols-2">
@@ -102,7 +100,7 @@ const VALUES = [
       <div class="grid gap-10 lg:grid-cols-[1fr_2fr] lg:gap-16">
         <div>
           <p class="eyebrow">Cómo trabajamos</p>
-          <h2 id="define" class="mt-3 text-4xl sm:text-5xl">
+          <h2 id="define" class="section-title mt-3">
             Lo que nos define
           </h2>
         </div>
@@ -117,21 +115,6 @@ const VALUES = [
         </ul>
       </div>
     </div>
-  </section>
-
-  <!-- Guías -->
-  <section aria-labelledby="guias" class="container-text pb-16 text-center sm:pb-24">
-    <p class="eyebrow">Para nuestros pacientes</p>
-    <h2 id="guias" class="mt-3 text-4xl sm:text-5xl">
-      Le acompañamos también en casa
-    </h2>
-    <p class="mt-5 text-lg text-ink-muted">
-      Si lleva ortodoncia con nosotros, tiene a mano guías cortas para cepillarse con brackets,
-      saber qué comer y qué hacer si algo se rompe.
-    </p>
-    <ArrowLink href={GUIDES_BASE} class="mt-8">
-      Ver las guías
-    </ArrowLink>
   </section>
 
   <!-- Dónde estamos -->
@@ -149,7 +132,7 @@ const VALUES = [
 
       <div>
         <p class="eyebrow">Visítenos</p>
-        <h2 id="clinica" class="mt-3 text-4xl sm:text-5xl">
+        <h2 id="clinica" class="section-title mt-3">
           Dónde estamos
         </h2>
         <p class="mt-5 text-lg font-bold">{clinic.name}</p>

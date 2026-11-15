@@ -1,7 +1,7 @@
 ---
 import { ArrowUpRight } from "lucide-react";
 
-/** Botón píldora con la flecha ↗ en un círculo, como en la referencia. */
+/** Botón píldora de contorno con la flecha ↗ a la izquierda, como en la referencia. */
 type Props = {
   href: string;
   tone?: "dark" | "light";
@@ -15,19 +15,14 @@ const { href, tone = "dark", class: className, external = false } = Astro.props;
 <a
   href={href}
   class:list={[
-    "btn-arrow",
-    tone === "light" ? "text-white hover:bg-white/10" : "text-ink hover:bg-canvas-soft",
+    "btn-pill",
+    tone === "light"
+      ? "border-white text-white hover:bg-white hover:!text-ink"
+      : "border-ink text-ink hover:bg-ink hover:text-white",
     className,
   ]}
   {...(external ? { rel: "noopener noreferrer", target: "_blank" } : {})}
 >
-  <span class="btn-arrow-icon">
-    <ArrowUpRight
-      aria-hidden="true"
-      className={`size-5 ${tone === "light" ? "text-ink" : "text-white"}`}
-    />
-  </span>
-  <span class:list={[tone === "light" ? "text-white" : "text-ink"]}>
-    <slot />
-  </span>
+  <ArrowUpRight aria-hidden="true" className="size-4" strokeWidth={2} />
+  <slot />
 </a>

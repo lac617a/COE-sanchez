@@ -63,7 +63,12 @@
 @layer base {
   :root {
     color-scheme: light;
-    /* Texto base 18 px; A+ sube a 20 px. Todo escala en rem. */
+    /* Landing: texto base 16 px, como la referencia. Todo escala en rem. */
+    font-size: 100%;
+  }
+
+  /* Guías: texto base 18 px para leer con calma en el celular. */
+  :root[data-area="guias"] {
     font-size: 112.5%;
   }
 
@@ -287,60 +292,89 @@
 }
 
 /*
- * Landing de la clínica (inicio, quiénes somos, especialidades).
- * Mismo sistema que las guías: portada oscura con grano, serif en cursiva y tarjetas grises.
+ * Landing de la clínica (inicio, quiénes somos, especialidades), fiel a la referencia:
+ * portada negra con haces de luz y grano, títulos de sección en sans negrita,
+ * tarjetas grises redondeadas y botones píldora con flecha ↗.
  */
 @layer components {
-  /* Cabecera sobre portada oscura: transparente y en blanco hasta que se hace scroll. */
+  /* Cabecera: logo y menú. Sobre portada oscura es transparente hasta hacer scroll. */
   .site-header {
-    @apply sticky top-0 z-30 border-b border-line bg-canvas/90 backdrop-blur-md transition-colors;
+    @apply sticky top-0 z-30 bg-white/95 text-ink shadow-[0_1px_0_var(--color-line)] backdrop-blur-md transition-colors;
+  }
+
+  .site-header[data-variant="dark"] {
+    @apply fixed inset-x-0;
   }
 
   .site-header[data-variant="dark"]:not([data-scrolled]) {
-    @apply border-transparent bg-ink text-white backdrop-blur-none;
+    @apply bg-transparent text-white shadow-none backdrop-blur-none;
   }
 
-  .site-header[data-variant="dark"]:not([data-scrolled]) .nav-link {
-    @apply text-white hover:bg-white/10;
+  /* Portada a todo el ancho con la textura de luz (public/images/hero-bg.webp). */
+  .hero-surface {
+    @apply relative isolate overflow-hidden text-white;
+    background:
+      linear-gradient(90deg, rgb(0 0 0 / 0.35), transparent 55%),
+      #050505 url("/images/hero-bg.webp") center / cover no-repeat;
   }
 
-  .site-header[data-variant="dark"]:not([data-scrolled]) .btn-secondary {
-    @apply border-white/70 text-white hover:bg-white hover:text-ink;
+  .hero-surface h1,
+  .hero-surface h2,
+  .hero-surface a:not(.btn) {
+    @apply text-white;
   }
 
-  .site-header[data-variant="dark"]:not([data-scrolled]) .menu-button {
-    @apply border-white/40 text-white;
+  /* Títulos de sección: sans negrita, como en la referencia. */
+  .section-title {
+    @apply font-sans text-[1.75rem] leading-tight font-bold tracking-normal text-[#333] sm:text-[2rem];
   }
 
-  .nav-link {
-    @apply inline-flex tap items-center rounded-full px-3 text-base font-semibold whitespace-nowrap text-ink no-underline transition-colors hover:bg-canvas-soft;
+  .surface-dark .section-title,
+  .hero-surface .section-title {
+    @apply text-white;
   }
 
-  .nav-link[aria-current="page"] {
-    @apply underline decoration-brand-400 decoration-2 underline-offset-8;
+  /* Titular grande en serif (solo portada y presentación). */
+  .display-title {
+    @apply font-display text-[2.5rem] leading-[1.15] font-normal sm:text-5xl;
   }
 
-  /* Botón con flecha ↗ en un círculo, como en la referencia. */
-  .btn-arrow {
-    @apply inline-flex min-h-tap items-center gap-3 rounded-full border-[1.5px] border-current py-1 pr-5 pl-1 font-bold no-underline transition-colors;
+  /* Botón píldora de contorno con flecha ↗ a la izquierda. */
+  .btn-pill {
+    @apply inline-flex min-h-tap items-center gap-2 rounded-full border px-5 text-[0.9375rem] font-semibold whitespace-nowrap no-underline transition-colors;
   }
 
-  .btn-arrow > .btn-arrow-icon {
-    @apply grid size-9 place-items-center rounded-full bg-current;
+  /* Tarjeta gris de la referencia. */
+  .card-gray {
+    @apply rounded-[1.25rem];
+    background: linear-gradient(160deg, #f6f6f6 0%, #e9e9e9 100%);
+  }
+
+  .icon-chip {
+    @apply grid size-9 place-items-center rounded-lg bg-white text-ink shadow-[0_1px_3px_rgb(0_0_0/0.12)];
   }
 
   /* Foto o hueco para foto con esquinas grandes. */
   .photo-frame {
-    @apply relative overflow-hidden rounded-[var(--radius-panel)] bg-canvas-soft;
+    @apply relative overflow-hidden rounded-[1.75rem] bg-canvas-soft;
   }
 
-  /* Texto largo de SEO, plegado con <details>. */
-  .prose-plain p {
-    @apply my-3 text-ink-muted;
+  /* Texto para buscadores: vista previa difuminada que se despliega. */
+  .seo-text[data-open="false"] .seo-body {
+    @apply max-h-28 overflow-hidden;
+    mask-image: linear-gradient(to bottom, black 30%, transparent);
   }
 
-  .prose-plain h2 {
-    @apply mt-8 mb-2 text-2xl sm:text-3xl;
+  .seo-body h2 {
+    @apply font-sans text-sm font-bold text-[#333];
+  }
+
+  .seo-body h3 {
+    @apply mt-3 text-sm font-semibold text-[#333];
+  }
+
+  .seo-body p {
+    @apply mt-2 text-xs leading-relaxed text-ink-muted;
   }
 }
 

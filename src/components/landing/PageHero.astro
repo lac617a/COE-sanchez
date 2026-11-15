@@ -15,11 +15,11 @@ const { title, crumbs } = Astro.props;
 const hasAside = Astro.slots.has("aside");
 ---
 
-<section class="surface-dark relative isolate overflow-hidden">
+<section class="hero-surface">
   <ArcLine className="pointer-events-none absolute -bottom-24 left-1/2 -z-10 w-[180%] max-w-none -translate-x-1/2 text-white/15 md:w-[110%]" />
   <div
     class:list={[
-      "container-page pt-8 pb-14 sm:pt-12 sm:pb-20",
+      "container-page pt-28 pb-14 sm:pt-32 sm:pb-20",
       hasAside && "md:grid md:grid-cols-[1.1fr_1fr] md:items-center md:gap-12",
     ]}
   >
@@ -36,8 +36,8 @@ const hasAside = Astro.slots.has("aside");
           ))}
         </ol>
       </nav>
-      <h1 class="mt-6 text-5xl italic sm:text-6xl lg:text-7xl">{title}</h1>
-      <div class="mt-6 max-w-xl text-lg text-ink-inverse-muted">
+      <h1 class="display-title mt-6 italic sm:text-[3.5rem]">{title}</h1>
+      <div class="mt-6 max-w-xl text-lg text-white/90">
         <slot />
       </div>
     </div>

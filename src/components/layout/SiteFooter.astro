@@ -1,11 +1,11 @@
 ---
-import { Clock, MapPin, MessageCircle, Phone } from "lucide-react";
+import { Image } from "astro:assets";
+import { MessageCircle } from "lucide-react";
 
+import logoMark from "@/assets/brand/logo-mark.png";
 import InstagramIcon from "@/components/icons/InstagramIcon.astro";
-
-import { getGuides, guideUrl } from "@/lib/guides";
 import { clinic } from "@/lib/content";
-import { MAIN_NAV } from "@/lib/nav";
+import { GUIDES_BASE } from "@/lib/guides";
 import {
   clinicAddressLine,
   clinicInstagramUrl,
@@ -14,118 +14,108 @@ import {
   clinicWhatsappUrl,
 } from "@/lib/site";
 
-const guides = await getGuides();
 const whatsappUrl = clinicWhatsappUrl();
 const phoneUrl = clinicPhoneUrl();
 const instagramUrl = clinicInstagramUrl();
+
+type FooterLink = { href: string; label: string; external?: boolean };
+
+const COLUMNS: Array<{ title: string; links: FooterLink[] }> = [
+  {
+    title: "Explora",
+    links: [
+      { href: "/quienes-somos", label: "Quiénes somos" },
+      { href: "/especialidades", label: "Especialidades" },
+      ...(whatsappUrl ? [{ href: whatsappUrl, label: "Agendar cita", external: true }] : []),
+    ],
+  },
+  {
+    title: "Pacientes",
+    links: [
+      { href: GUIDES_BASE, label: "Guías de ortodoncia" },
+      { href: `${GUIDES_BASE}/urgencias`, label: "Qué hacer en una urgencia" },
+    ],
+  },
+  {
+    title: "Encuéntrenos",
+    links: [
+      { href: clinicMapsUrl(), label: "Cómo llegar", external: true },
+      ...(instagramUrl ? [{ href: instagramUrl, label: "Instagram", external: true }] : []),
+      { href: "/creditos", label: "Créditos" },
+    ],
+  },
+];
 ---
 
-<footer class="surface-dark">
-  <div class="container-page border-b border-line-inverse py-14 sm:py-20">
-    <h2 class="text-4xl italic sm:text-6xl">¿Hablamos de su sonrisa?</h2>
-    <p class="mt-4 max-w-xl text-lg text-ink-inverse-muted">
-      Escríbanos y le ayudamos a encontrar un horario para su valoración.
-    </p>
-    <div class="mt-8 flex flex-wrap gap-3">
-      {whatsappUrl && (
-        <a href={whatsappUrl} rel="noopener noreferrer" target="_blank" class="btn btn-light">
-          <MessageCircle aria-hidden="true" className="size-5" />
-          Escribir por WhatsApp
-        </a>
-      )}
-      {phoneUrl && (
-        <a href={phoneUrl} class="btn btn-outline-light">
-          <Phone aria-hidden="true" className="size-5" />
-          {clinic.phone}
-        </a>
-      )}
-    </div>
-  </div>
-
-  <div class="container-page grid gap-10 py-14 md:grid-cols-[1.3fr_1fr_1fr_1fr]">
-    <div class="space-y-3">
-      <p class="font-display text-3xl">{clinic.name}</p>
-      <p class="max-w-sm text-ink-inverse-muted">{clinic.tagline}.</p>
-      {instagramUrl && (
-        <a
-          href={instagramUrl}
-          rel="noopener noreferrer"
-          target="_blank"
-          class="inline-flex tap items-center gap-2"
-        >
-          <InstagramIcon class="size-5" />
-          {clinic.instagram}
-        </a>
-      )}
-    </div>
-
-    <nav aria-label="Sitio">
-      <p class="eyebrow">Clínica</p>
-      <ul class="mt-3 space-y-1">
-        <li>
-          <a href="/" class="inline-flex min-h-tap items-center no-underline hover:underline">
-            Inicio
-          </a>
-        </li>
-        {MAIN_NAV.map((item) => (
-          <li>
-            <a
-              href={item.href}
-              class="inline-flex min-h-tap items-center no-underline hover:underline"
-            >
-              {item.label}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
-
-    <nav aria-label="Guías del pie de página">
-      <p class="eyebrow">Guías</p>
-      <ul class="mt-3 space-y-1">
-        {guides.map((guide) => (
-          <li>
-            <a
-              href={guideUrl(guide.data.slug)}
-              class="inline-flex min-h-tap items-center no-underline hover:underline"
-            >
-              {guide.data.title}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
-
+<footer class="mt-auto border-t border-line bg-white">
+  <div class="container-page grid gap-10 py-14 md:grid-cols-[1.2fr_2fr] md:gap-16">
     <div>
-      <p class="eyebrow">Contacto</p>
-      <div class="mt-4 space-y-3 text-ink-inverse-muted">
-        <p class="flex items-start gap-2">
-          <MapPin aria-hidden="true" className="mt-1 size-5 shrink-0 text-white" />
-          <span>
-            {clinicAddressLine()}.{" "}
-            <a href={clinicMapsUrl()} rel="noopener noreferrer" target="_blank">
-              Cómo llegar
-            </a>
-          </span>
-        </p>
-        {clinic.hours && (
-          <p class="flex items-start gap-2">
-            <Clock aria-hidden="true" className="mt-1 size-5 shrink-0 text-white" />
-            {clinic.hours}
-          </p>
+      <p class="font-display text-[1.75rem] leading-tight text-[#333] italic">
+        ¿Listo/a para transformar su sonrisa?
+      </p>
+      <div class="mt-4 space-y-1 text-[0.9375rem] text-[#333]">
+        {phoneUrl && (
+          <a href={phoneUrl} class="block no-underline hover:underline">
+            {clinic.phone}
+          </a>
+        )}
+        <p>{clinicAddressLine()}.</p>
+        {clinic.hours && <p class="text-ink-muted">{clinic.hours}</p>}
+      </div>
+      <div class="mt-5 flex items-center gap-2">
+        {instagramUrl && (
+          <a
+            href={instagramUrl}
+            rel="noopener noreferrer"
+            target="_blank"
+            class="grid tap place-items-center"
+          >
+            <InstagramIcon class="size-5" />
+            <span class="sr-only">Instagram</span>
+          </a>
+        )}
+        {whatsappUrl && (
+          <a
+            href={whatsappUrl}
+            rel="noopener noreferrer"
+            target="_blank"
+            class="grid tap place-items-center"
+          >
+            <MessageCircle aria-hidden="true" className="size-5" />
+            <span class="sr-only">WhatsApp</span>
+          </a>
         )}
       </div>
     </div>
+
+    <div class="grid gap-8 sm:grid-cols-3">
+      {COLUMNS.map((column) => (
+        <nav aria-label={column.title}>
+          <p class="text-[0.9375rem] font-bold text-[#333]">{column.title}</p>
+          <ul class="mt-3 space-y-1">
+            {column.links.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class="inline-flex min-h-9 items-center text-[0.9375rem] text-ink-muted no-underline hover:text-ink hover:underline"
+                  {...(link.external ? { rel: "noopener noreferrer", target: "_blank" } : {})}
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ))}
+    </div>
   </div>
 
-  <div class="border-t border-line-inverse">
-    <div class="container-page flex flex-wrap items-center justify-between gap-4 py-5 text-base text-ink-inverse-muted">
+  <div class="border-t border-line">
+    <div class="container-page flex flex-wrap items-center justify-between gap-4 py-5 text-[0.8125rem] text-[#807981]">
       <p>
-        © {new Date().getFullYear()} {clinic.name}
+        © {new Date().getFullYear()} {clinic.name}. Todos los derechos reservados.
       </p>
-      <a href="/creditos" class="inline-flex tap items-center">
-        Créditos
-      </a>
+      <Image src={logoMark} alt="" width={48} class="h-6 w-auto opacity-80" />
     </div>
   </div>
 </footer>
