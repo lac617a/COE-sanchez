@@ -1,0 +1,50 @@
+---
+import { ArcLine } from "@/components/illustrations/decor";
+
+/**
+ * Portada oscura de las páginas internas (quiénes somos, especialidades), a todo el ancho,
+ * con ruta de navegación y título en serif cursiva, como en la referencia.
+ * Slot por defecto: texto bajo el título. Slot "aside": columna derecha (foto o tarjeta).
+ */
+type Props = {
+  title: string;
+  crumbs: Array<{ name: string; href?: string }>;
+};
+
+const { title, crumbs } = Astro.props;
+const hasAside = Astro.slots.has("aside");
+---
+
+<section class="surface-dark relative isolate overflow-hidden">
+  <ArcLine className="pointer-events-none absolute -bottom-24 left-1/2 -z-10 w-[180%] max-w-none -translate-x-1/2 text-white/15 md:w-[110%]" />
+  <div
+    class:list={[
+      "container-page pt-8 pb-14 sm:pt-12 sm:pb-20",
+      hasAside && "md:grid md:grid-cols-[1.1fr_1fr] md:items-center md:gap-12",
+    ]}
+  >
+    <div>
+      <nav aria-label="Ruta de navegación" class="text-base">
+        <ol class="flex flex-wrap gap-2 text-ink-inverse-muted">
+          {crumbs.map((crumb, index) => (
+            <>
+              {index > 0 && <li aria-hidden="true">/</li>}
+              <li aria-current={crumb.href ? undefined : "page"}>
+                {crumb.href ? <a href={crumb.href}>{crumb.name}</a> : crumb.name}
+              </li>
+            </>
+          ))}
+        </ol>
+      </nav>
+      <h1 class="mt-6 text-5xl italic sm:text-6xl lg:text-7xl">{title}</h1>
+      <div class="mt-6 max-w-xl text-lg text-ink-inverse-muted">
+        <slot />
+      </div>
+    </div>
+    {hasAside && (
+      <div class="mt-10 md:mt-0">
+        <slot name="aside" />
+      </div>
+    )}
+  </div>
+</section>

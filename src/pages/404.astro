@@ -1,0 +1,36 @@
+---
+import { Siren, Sparkles, Toothbrush, Utensils } from "lucide-react";
+
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { guideUrl } from "@/lib/guides";
+
+const SHORTCUTS = [
+  { href: guideUrl("urgencias"), label: "Tengo una urgencia con mis brackets", Icon: Siren },
+  { href: guideUrl("cepillado"), label: "Cómo cepillarme con brackets", Icon: Toothbrush },
+  { href: guideUrl("alimentos"), label: "¿Puedo comer esto?", Icon: Utensils },
+  { href: "/especialidades", label: "Especialidades de la clínica", Icon: Sparkles },
+];
+---
+
+<BaseLayout title="Página no encontrada">
+  <div class="container-text space-y-6 py-14">
+    <h1 class="text-4xl sm:text-5xl">No encontramos esta página</h1>
+    <p class="text-ink-muted">Puede que haya cambiado de lugar. Esto es lo más buscado:</p>
+    <ul class="grid gap-3">
+      {SHORTCUTS.map(({ href, label, Icon }) => (
+        <li>
+          <a
+            href={href}
+            class="card-soft flex tap items-center gap-3 p-5 font-bold text-ink no-underline hover:shadow-[var(--shadow-soft)]"
+          >
+            <Icon aria-hidden="true" className="size-6" />
+            {label}
+          </a>
+        </li>
+      ))}
+    </ul>
+    <p>
+      <a href="/">Volver al inicio</a>
+    </p>
+  </div>
+</BaseLayout>

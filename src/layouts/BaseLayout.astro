@@ -1,0 +1,78 @@
+---
+import "@fontsource-variable/nunito-sans";
+import "@fontsource/dm-serif-display/400.css";
+import "@fontsource/dm-serif-display/400-italic.css";
+import "@/styles/global.css";
+
+import QuickAccessBar from "@/components/layout/QuickAccessBar.astro";
+import SiteFooter from "@/components/layout/SiteFooter.astro";
+import SiteHeader from "@/components/layout/SiteHeader.astro";
+import JsonLd from "@/components/seo/JsonLd.astro";
+import { textSizeInitScript } from "@/components/layout/text-size-toggle";
+import { site } from "@/lib/site";
+
+type Props = {
+  /** Título de la página; se completa como "… | Clínica Sánchez Quintero". */
+  title?: string;
+  description?: string;
+  /** Cabecera transparente sobre una portada oscura. */
+  headerVariant?: "light" | "dark";
+  /** Barra fija de accesos rápidos (solo en las guías, en el celular). */
+  quickAccess?: boolean;
+  ogType?: "website" | "article";
+  jsonLd?: Array<Record<string, unknown>>;
+};
+
+const {
+  title,
+  description = site.description,
+  headerVariant = "light",
+  quickAccess = false,
+  ogType = "website",
+  jsonLd = [],
+} = Astro.props;
+
+const fullTitle = title
+  ? `${title} | ${site.name}`
+  : `${site.legalName} | Ortodoncia y estética dental en Bucaramanga`;
+// Canonical sin parámetros (los QR llevan UTM).
+const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).href;
+---
+
+<!doctype html>
+<html lang="es-CO">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#141414" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="robots" content={site.isProduction ? "index, follow" : "noindex, nofollow"} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content={site.locale} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script is:inline set:html={textSizeInitScript} />
+    {jsonLd.length > 0 && <JsonLd data={jsonLd} />}
+  </head>
+  <body class:list={["flex min-h-dvh flex-col", quickAccess && "pb-20 xl:pb-0"]}>
+    <a
+      href="#contenido"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-full focus:bg-surface focus:px-4 focus:py-2"
+    >
+      Saltar al contenido
+    </a>
+    <SiteHeader variant={headerVariant} />
+    <main id="contenido" class="w-full flex-1">
+      <slot />
+    </main>
+    <SiteFooter />
+    {quickAccess && <QuickAccessBar />}
+  </body>
+</html>

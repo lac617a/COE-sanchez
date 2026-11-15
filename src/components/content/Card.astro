@@ -1,0 +1,26 @@
+---
+import { BrushingScene } from "@/components/illustrations/brushing-scene";
+
+import type { BrushingStep } from "@/components/illustrations/brushing-scene";
+
+/** Tarjeta numerada. `scene`: paso del dibujo de cepillado que la acompaña. */
+type Props = { title: string; scene?: BrushingStep };
+
+const { title, scene } = Astro.props;
+---
+
+<li class="card-soft relative p-5 [counter-increment:card]">
+  <span
+    aria-hidden="true"
+    class="absolute top-4 left-4 z-10 grid size-9 place-items-center rounded-full bg-ink text-sm leading-none font-bold text-white before:content-[counter(card)]"
+  ></span>
+  {scene && (
+    <div class="mb-4 rounded-[1.125rem] bg-white px-6 py-3 [&_svg]:mx-auto [&_svg]:h-28 [&_svg]:w-auto sm:[&_svg]:h-36">
+      <BrushingScene step={scene} />
+    </div>
+  )}
+  <h3 class="m-0 text-lg">{title}</h3>
+  <div class="mt-1 text-ink-muted [&_p]:m-0">
+    <slot />
+  </div>
+</li>

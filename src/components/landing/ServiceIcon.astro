@@ -1,0 +1,33 @@
+---
+import {
+  Grip,
+  Layers,
+  MonitorSmartphone,
+  Printer,
+  Ruler,
+  Smile,
+  Stethoscope,
+  WandSparkles,
+  Waves,
+} from "lucide-react";
+
+import type { Service } from "@/data/services";
+
+type Props = { icon: Service["icon"]; class?: string };
+
+const ICONS = {
+  aligner: Smile,
+  bracket: Grip,
+  flow: Waves,
+  metal: Ruler,
+  digital: MonitorSmartphone,
+  detail: WandSparkles,
+  veneer: Layers,
+  print: Printer,
+  care: Stethoscope,
+} as const;
+
+const Icon = ICONS[Astro.props.icon];
+---
+
+<Icon aria-hidden="true" className={Astro.props.class ?? "size-6"} strokeWidth={1.6} />

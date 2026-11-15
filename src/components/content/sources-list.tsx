@@ -1,0 +1,21 @@
+import type { Source } from "@/lib/schemas";
+
+export function SourcesList({ sources }: { sources: Source[] }) {
+  return (
+    <section aria-labelledby="fuentes" className="space-y-3 border-t border-line pt-8">
+      <h2 id="fuentes" className="text-2xl">
+        Fuentes
+      </h2>
+      <ul className="space-y-2 text-base text-ink-muted">
+        {sources.map((source) => (
+          <li key={source.url}>
+            <a href={source.url} rel="noopener noreferrer" target="_blank">
+              {source.title}
+            </a>{" "}
+            — {source.publisher}
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}

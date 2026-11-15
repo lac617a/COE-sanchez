@@ -1,0 +1,72 @@
+---
+import { Image } from "astro:assets";
+import { Camera } from "lucide-react";
+
+import { ArcLine } from "@/components/illustrations/decor";
+
+import type { ImageMetadata } from "astro";
+
+/**
+ * Foto real de la clínica o, mientras llega, un hueco con el mismo marco.
+ * No usar fotos de stock: solo fotos propias y con permiso de quien aparece.
+ * `label` dice qué foto va aquí; solo se ve en desarrollo.
+ */
+type Props = {
+  src?: ImageMetadata;
+  alt?: string;
+  label: string;
+  class?: string;
+  tone?: "light" | "dark";
+  sizes?: string;
+  eager?: boolean;
+};
+
+const {
+  src,
+  alt = "",
+  label,
+  class: className,
+  tone = "light",
+  sizes,
+  eager = false,
+} = Astro.props;
+const showLabel = import.meta.env.DEV;
+---
+
+<div class:list={["photo-frame isolate", className]}>
+  {src ? (
+    <Image
+      src={src}
+      alt={alt}
+      widths={[400, 700, 1000]}
+      sizes={sizes ?? "(min-width: 768px) 40vw, 90vw"}
+      loading={eager ? "eager" : "lazy"}
+      class="absolute inset-0 h-full w-full object-cover"
+    />
+  ) : (
+    <div
+      aria-hidden="true"
+      class:list={[
+        "absolute inset-0 grid place-items-center",
+        tone === "dark" ? "surface-dark" : "card-soft",
+      ]}
+    >
+      <ArcLine
+        className={`absolute -bottom-6 left-1/2 w-[140%] max-w-none -translate-x-1/2 ${tone === "dark" ? "text-white/20" : "text-ink/10"}`}
+      />
+      <span
+        class:list={[
+          "grid size-14 place-items-center rounded-full",
+          tone === "dark" ? "bg-white/10 text-white/70" : "bg-white text-brand-500",
+        ]}
+      >
+        <Camera className="size-6" strokeWidth={1.5} />
+      </span>
+      {showLabel && (
+        <span class="absolute inset-x-3 bottom-3 hidden rounded-full bg-ink/80 px-3 py-1 text-center text-xs font-bold text-white sm:block">
+          Foto pendiente: {label}
+        </span>
+      )}
+    </div>
+  )}
+</div>

@@ -1,0 +1,28 @@
+---
+import { Info, TriangleAlert } from "lucide-react";
+
+/** Nota destacada. El tono se comunica con icono + etiqueta, no solo con color. */
+type Props = { tone?: "info" | "warning" };
+
+const TONES = {
+  info: { Icon: Info, label: "Importante", className: "bg-canvas-soft", iconClass: "text-ink" },
+  warning: {
+    Icon: TriangleAlert,
+    label: "Atención",
+    className: "bg-caution-soft",
+    iconClass: "text-caution",
+  },
+} as const;
+
+const { Icon, label, className, iconClass } = TONES[Astro.props.tone ?? "info"];
+---
+
+<div class:list={["my-6 flex gap-4 rounded-[var(--radius-card)] p-5", className]}>
+  <Icon aria-hidden="true" className={`mt-1 size-6 shrink-0 ${iconClass}`} strokeWidth={2.25} />
+  <div>
+    <p class="font-bold">{label}</p>
+    <div class="[&_p]:m-0">
+      <slot />
+    </div>
+  </div>
+</div>

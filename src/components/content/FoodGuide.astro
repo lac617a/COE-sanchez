@@ -1,0 +1,8 @@
+---
+import { FoodTrafficLight } from "@/components/interactive/food-traffic-light";
+import { foods } from "@/lib/content";
+
+/** Semáforo de alimentos: la lista va en el HTML; el buscador se activa al verse en pantalla. */
+---
+
+<FoodTrafficLight client:visible foods={foods} />

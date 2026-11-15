@@ -1,0 +1,14 @@
+---
+/**
+ * Tarjetas numeradas para el MDX: una idea por tarjeta, todas visibles a la vez
+ * (sin carrusel ni botones). El número sale de un contador CSS del <ol>.
+ */
+type Props = { label?: string };
+---
+
+<ol
+  aria-label={Astro.props.label}
+  class="my-6 grid list-none gap-4 pl-0 [counter-reset:card] sm:grid-cols-2"
+>
+  <slot />
+</ol>

@@ -1,0 +1,17 @@
+---
+/** Enlaces del MDX: los externos se abren en otra pestaña. */
+type Props = { href?: string };
+
+const { href = "", ...rest } = Astro.props;
+const external = /^https?:\/\//.test(href);
+---
+
+{external ? (
+  <a href={href} rel="noopener noreferrer" target="_blank" {...rest}>
+    <slot />
+  </a>
+) : (
+  <a href={href} {...rest}>
+    <slot />
+  </a>
+)}

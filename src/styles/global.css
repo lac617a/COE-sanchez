@@ -1,0 +1,367 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens — dirección "Clínica editorial" (D10): base monocroma (blanco, grises y
+ * negro), serif elegante para títulos y el oro rosa del logo COE Dental como único acento.
+ * Referencia visual: coedental.pe (lenguaje visual, nunca sus textos ni fotos).
+ *
+ * El tono del logo (brand-400) solo llega a 2.6:1: se usa para decorar e ilustrar.
+ * Texto de marca sobre claro: brand-600/700. Sobre oscuro: brand-300.
+ * Al cambiar colores, verificar contraste: texto ≥ 4.5:1, UI ≥ 3:1.
+ */
+@theme {
+  /* Neutros */
+  --color-canvas: #ffffff; /* fondo de página */
+  --color-canvas-soft: #f4f4f2; /* secciones y tarjetas suaves */
+  --color-surface: #ffffff; /* tarjetas */
+  --color-ink: #141414; /* texto, botones y bloques oscuros */
+  --color-ink-muted: #5c5c5c; /* texto secundario (6.7:1 en blanco, 6.1:1 en gris) */
+  --color-ink-inverse-muted: #b3b3b3; /* texto secundario sobre oscuro (8.8:1) */
+  --color-line: rgb(20 20 20 / 0.12); /* separadores */
+  --color-line-inverse: rgb(255 255 255 / 0.22);
+
+  /* Marca: oro rosa del logo (muestreado: #a8846c · #ba957c · #d2aa8f) */
+  --color-brand-50: #fbf3ee;
+  --color-brand-100: #f3e3d9;
+  --color-brand-200: #e8cfbf;
+  --color-brand-300: #d2aa8f; /* texto de acento sobre oscuro (8.7:1) */
+  --color-brand-400: #ba957c; /* tono del logo: solo decoración (2.6:1) */
+  --color-brand-500: #9e7860;
+  --color-brand-600: #84624d; /* texto de acento sobre claro (5.5:1) */
+  --color-brand-700: #6b4f3e;
+
+  /* Anatomía y materiales (solo ilustración) */
+  --color-gum: #f1c3bb;
+  --color-shade: #e2e2df; /* sombra desplazada de las ilustraciones */
+  --color-metal: #dcdcdc;
+  --color-water: #e3eef6;
+  --color-plaque: #c77dba;
+  --color-sparkle: #e9c46a;
+
+  /* Estados: semáforo y urgencia. Siempre con icono + texto. */
+  --color-ok: #1b6e45;
+  --color-ok-soft: #e3f4ea;
+  --color-caution: #7a4d00;
+  --color-caution-soft: #fff2cf;
+  --color-stop: #a8231b;
+  --color-stop-soft: #fdeae8;
+
+  --color-focus: #1f5fbf;
+
+  /* Tipografía: serif de títulos (en sintonía con el logo) y sans muy legible */
+  --font-sans: "Nunito Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "DM Serif Display", ui-serif, Georgia, serif;
+
+  /* Formas */
+  --radius-card: 1.5rem;
+  --radius-panel: 2rem;
+  --shadow-soft: 0 1px 2px rgb(20 20 20 / 0.04), 0 12px 32px -12px rgb(20 20 20 / 0.12);
+
+  --spacing-tap: 2.75rem; /* 44 px: tamaño mínimo táctil */
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+    /* Texto base 18 px; A+ sube a 20 px. Todo escala en rem. */
+    font-size: 112.5%;
+  }
+
+  :root[data-text-size="large"] {
+    font-size: 125%;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    /* La barra de accesos rápidos es fija: que no tape el foco (WCAG 2.4.11). */
+    scroll-padding-bottom: 6rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    @apply bg-canvas font-sans text-ink antialiased;
+    line-height: 1.65;
+    overflow-x: clip;
+  }
+
+  h1,
+  h2 {
+    @apply font-display text-ink;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  h3 {
+    @apply font-sans text-ink;
+    font-weight: 800;
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+
+  a {
+    @apply text-ink underline decoration-1 underline-offset-4;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+    border-radius: 0.375rem;
+  }
+
+  summary {
+    cursor: pointer;
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+}
+
+@layer components {
+  /* Contenedores */
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6;
+  }
+
+  .container-text {
+    @apply mx-auto w-full max-w-2xl px-4 sm:px-6;
+  }
+
+  /* Botones píldora. Una sola acción primaria por bloque. */
+  .btn {
+    @apply inline-flex min-h-tap items-center justify-center gap-2 rounded-full border-[1.5px] px-6 py-2 font-bold whitespace-nowrap no-underline transition-colors select-none;
+  }
+
+  .btn-primary {
+    @apply border-ink bg-ink text-white hover:bg-ink/85;
+  }
+
+  .btn-secondary {
+    @apply border-ink bg-transparent text-ink hover:bg-ink hover:text-white;
+  }
+
+  /* Sobre fondo oscuro */
+  .btn-light {
+    @apply border-white bg-white text-ink hover:bg-white/85;
+  }
+
+  .btn-outline-light {
+    @apply border-white/70 bg-transparent text-white hover:bg-white hover:text-ink;
+  }
+
+  /* Antetítulo en versalitas */
+  .eyebrow {
+    @apply text-sm font-bold tracking-[0.16em] text-ink-muted uppercase;
+  }
+
+  /* Bloque oscuro con foco de luz y grano, como la portada de la referencia. */
+  .surface-dark {
+    @apply text-white;
+    background-color: var(--color-ink);
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+      radial-gradient(120% 90% at 15% 0%, #4a4a4a 0%, #1c1c1c 45%, var(--color-ink) 75%);
+  }
+
+  .surface-dark h1,
+  .surface-dark h2,
+  .surface-dark h3,
+  .surface-dark a:not(.btn) {
+    @apply text-white;
+  }
+
+  .surface-dark .eyebrow {
+    @apply text-ink-inverse-muted;
+  }
+
+  .surface-dark :focus-visible {
+    outline-color: #ffffff;
+  }
+
+  /* Tarjeta gris suave con degradado, como las de especialidades de la referencia. */
+  .card-soft {
+    @apply rounded-[var(--radius-card)];
+    background: linear-gradient(180deg, #f7f7f6 0%, #ededeb 100%);
+  }
+
+  /* Texto largo de las guías (MDX). Cada h2 abre una sección numerada (rehype en velite.config.ts). */
+  .content {
+    counter-reset: section;
+  }
+
+  .content > section {
+    @apply border-t border-line py-10;
+    counter-increment: section;
+  }
+
+  .content > section::before {
+    content: counter(section, decimal-leading-zero);
+    @apply mb-2 block font-display text-lg text-brand-600;
+  }
+
+  .content h2 {
+    @apply mb-5 text-3xl sm:text-4xl;
+  }
+
+  .content h3 {
+    @apply mt-6 mb-2 text-xl;
+  }
+
+  .content section > p {
+    @apply my-3;
+  }
+
+  .content section > ul:not([class]),
+  .content section > ol:not([class]) {
+    @apply my-5 space-y-3 pl-0;
+  }
+
+  .content section > ul:not([class]) {
+    @apply list-none;
+  }
+
+  .content section > ul:not([class]) > li {
+    @apply relative pl-7;
+  }
+
+  .content section > ul:not([class]) > li::before {
+    content: "";
+    @apply absolute top-[0.7em] left-1 size-2 rounded-full bg-brand-400;
+  }
+
+  .content section > ol:not([class]) {
+    @apply list-none;
+    counter-reset: item;
+  }
+
+  .content section > ol:not([class]) > li {
+    @apply relative pl-12;
+    counter-increment: item;
+  }
+
+  .content section > ol:not([class]) > li::before {
+    content: counter(item);
+    @apply absolute top-0 left-0 grid size-8 place-items-center rounded-full bg-ink text-sm leading-none font-bold text-white;
+  }
+}
+
+/*
+ * Parallax con animaciones ligadas al scroll, sin JavaScript.
+ * Solo decoración e ilustraciones; el texto nunca se mueve.
+ * Navegadores sin soporte o con "reducir movimiento" ven todo quieto.
+ */
+@keyframes parallax-shift {
+  from {
+    translate: 0 var(--parallax, 2rem);
+  }
+  to {
+    translate: 0 calc(var(--parallax, 2rem) * -1);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .parallax {
+      animation: parallax-shift linear both;
+      animation-timeline: view();
+    }
+  }
+}
+
+@utility tap {
+  min-height: var(--spacing-tap);
+  min-width: var(--spacing-tap);
+}
+
+@utility min-h-tap {
+  min-height: var(--spacing-tap);
+}
+
+/*
+ * Landing de la clínica (inicio, quiénes somos, especialidades).
+ * Mismo sistema que las guías: portada oscura con grano, serif en cursiva y tarjetas grises.
+ */
+@layer components {
+  /* Cabecera sobre portada oscura: transparente y en blanco hasta que se hace scroll. */
+  .site-header {
+    @apply sticky top-0 z-30 border-b border-line bg-canvas/90 backdrop-blur-md transition-colors;
+  }
+
+  .site-header[data-variant="dark"]:not([data-scrolled]) {
+    @apply border-transparent bg-ink text-white backdrop-blur-none;
+  }
+
+  .site-header[data-variant="dark"]:not([data-scrolled]) .nav-link {
+    @apply text-white hover:bg-white/10;
+  }
+
+  .site-header[data-variant="dark"]:not([data-scrolled]) .btn-secondary {
+    @apply border-white/70 text-white hover:bg-white hover:text-ink;
+  }
+
+  .site-header[data-variant="dark"]:not([data-scrolled]) .menu-button {
+    @apply border-white/40 text-white;
+  }
+
+  .nav-link {
+    @apply inline-flex tap items-center rounded-full px-3 text-base font-semibold whitespace-nowrap text-ink no-underline transition-colors hover:bg-canvas-soft;
+  }
+
+  .nav-link[aria-current="page"] {
+    @apply underline decoration-brand-400 decoration-2 underline-offset-8;
+  }
+
+  /* Botón con flecha ↗ en un círculo, como en la referencia. */
+  .btn-arrow {
+    @apply inline-flex min-h-tap items-center gap-3 rounded-full border-[1.5px] border-current py-1 pr-5 pl-1 font-bold no-underline transition-colors;
+  }
+
+  .btn-arrow > .btn-arrow-icon {
+    @apply grid size-9 place-items-center rounded-full bg-current;
+  }
+
+  /* Foto o hueco para foto con esquinas grandes. */
+  .photo-frame {
+    @apply relative overflow-hidden rounded-[var(--radius-panel)] bg-canvas-soft;
+  }
+
+  /* Texto largo de SEO, plegado con <details>. */
+  .prose-plain p {
+    @apply my-3 text-ink-muted;
+  }
+
+  .prose-plain h2 {
+    @apply mt-8 mb-2 text-2xl sm:text-3xl;
+  }
+}
+
+/* Aparece al entrar en pantalla (solo CSS). Sin soporte o con "reducir movimiento": quieto. */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    translate: 0 1.5rem;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: rise-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+  }
+}

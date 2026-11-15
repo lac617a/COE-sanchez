@@ -1,0 +1,309 @@
+---
+import { Image } from "astro:assets";
+import { ChevronDown, FlaskConical, BookOpenCheck, ScanLine, Smile } from "lucide-react";
+
+import bracesPhoto from "@/assets/brand/ortodoncia-brackets.jpg";
+import GuideCard from "@/components/guides/GuideCard.astro";
+import InstagramIcon from "@/components/icons/InstagramIcon.astro";
+import { ArcLine, SmileCurve } from "@/components/illustrations/decor";
+import ArrowLink from "@/components/landing/ArrowLink.astro";
+import PhotoSlot from "@/components/landing/PhotoSlot.astro";
+import ServiceCard from "@/components/landing/ServiceCard.astro";
+import { services } from "@/data/services";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { clinic } from "@/lib/content";
+import { getGuides, GUIDES_BASE } from "@/lib/guides";
+import { dentistJsonLd, websiteJsonLd } from "@/lib/seo";
+import { clinicInstagramUrl, clinicWhatsappUrl } from "@/lib/site";
+
+const guides = await getGuides();
+const whatsappUrl = clinicWhatsappUrl();
+const instagramUrl = clinicInstagramUrl();
+
+/** Cifras que ya están en los datos del sitio: nada inventado ni publicitario. */
+const STATS = [
+  { value: String(clinic.doctors.length), label: "Especialistas a cargo de su tratamiento" },
+  { value: String(services.length), label: "Tratamientos, todo en un solo lugar" },
+  { value: "3D", label: "Tecnología para planificar y fabricar" },
+  { value: String(guides.length), label: "Guías de cuidado para pacientes" },
+];
+
+const DIFFERENCE = [
+  {
+    Icon: FlaskConical,
+    title: "Laboratorio propio",
+    text: "Diseñamos y fabricamos en la clínica alineadores y lentes dentales.",
+  },
+  {
+    Icon: ScanLine,
+    title: "Tecnología 3D",
+    text: "Escaneo y planificación digital para personalizar cada tratamiento.",
+  },
+  {
+    Icon: Smile,
+    title: "AlineaPro, marca propia",
+    text: "Nuestros alineadores transparentes, creados por la clínica.",
+  },
+  {
+    Icon: BookOpenCheck,
+    title: "Le acompañamos en casa",
+    text: "Guías claras para cuidar sus brackets entre cita y cita.",
+  },
+];
+
+function initials(name: string): string {
+  return name
+    .replace(/^(Dra?\.)\s+/, "")
+    .split(/\s+/)
+    .filter((part) => /^[A-ZÁÉÍÓÚÑ]/.test(part))
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("");
+}
+---
+
+<BaseLayout headerVariant="dark" jsonLd={[websiteJsonLd(), dentistJsonLd()]}>
+  <!-- Portada -->
+  <section class="surface-dark relative isolate overflow-hidden">
+    <div class="container-page grid gap-12 pt-10 pb-16 sm:pt-16 md:grid-cols-[1.05fr_1fr] md:items-center md:pb-24">
+      <div class="reveal">
+        <p class="eyebrow">{clinic.tagline} · Bucaramanga</p>
+        <h1 class="mt-5 text-[2.9rem] italic sm:text-6xl lg:text-7xl">
+          Su sonrisa, <span class="text-brand-300">diseñada a su medida</span>
+        </h1>
+        <p class="mt-6 max-w-md text-lg text-ink-inverse-muted">
+          Somos una clínica de ortodoncia y estética dental con laboratorio propio y tecnología 3D
+          para planificar cada tratamiento.
+        </p>
+        <div class="mt-9 flex flex-wrap items-center gap-3">
+          <ArrowLink href="/quienes-somos" tone="light">
+            Conozca la clínica
+          </ArrowLink>
+          {whatsappUrl && (
+            <a href={whatsappUrl} rel="noopener noreferrer" target="_blank" class="btn btn-light">
+              Agendar cita
+            </a>
+          )}
+        </div>
+      </div>
+
+      <div class="relative">
+        <ArcLine className="pointer-events-none absolute top-1/2 left-1/2 -z-10 w-[130%] max-w-none -translate-x-1/2 -translate-y-[15%] text-white/25" />
+        <figure class="parallax overflow-hidden rounded-[var(--radius-panel)] bg-white p-1.5 shadow-[0_30px_60px_-20px_rgb(0_0_0/0.6)] [--parallax:1rem]">
+          <Image
+            src={bracesPhoto}
+            alt="Sonrisa con brackets metálicos y ligas de color."
+            widths={[480, 800, 1000]}
+            sizes="(max-width: 767px) calc(100vw - 2rem), 45vw"
+            loading="eager"
+            class="aspect-[4/3] h-auto w-full rounded-[1.6rem] object-cover saturate-[0.85]"
+          />
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- Presentación -->
+  <section aria-labelledby="presentacion" class="container-page py-16 sm:py-24">
+    <h2 id="presentacion" class="mx-auto max-w-3xl text-center text-4xl sm:text-5xl">
+      Ortodoncia y estética dental, de principio a fin en la clínica
+    </h2>
+    <SmileCurve className="mx-auto mt-5 h-5 w-36 text-brand-400" />
+
+    <div class="relative mt-12">
+      <div class="grid grid-cols-3 items-end gap-3 px-2 sm:gap-6 sm:px-10">
+        <PhotoSlot
+          label="atención en consulta"
+          class="aspect-[3/4] sm:aspect-[4/5] sm:translate-y-6"
+        />
+        <PhotoSlot label="laboratorio y tecnología 3D" class="aspect-[3/4] sm:aspect-[4/5]" />
+        <PhotoSlot
+          label="el equipo de la clínica"
+          class="aspect-[3/4] sm:aspect-[4/5] sm:translate-y-6"
+        />
+      </div>
+      <div class="relative -mt-6 rounded-[var(--radius-panel)] bg-ink px-6 pt-12 pb-10 text-center text-white sm:-mt-16 sm:px-16 sm:pt-24 sm:pb-14">
+        <h3 class="font-display text-3xl font-normal text-white sm:text-4xl">
+          Especialistas en ortodoncia y estética en Bucaramanga
+        </h3>
+        <p class="mx-auto mt-4 max-w-2xl text-ink-inverse-muted">
+          La clínica lleva el nombre de sus especialistas: la Dra. Lorena Sánchez Lázaro y el Dr.
+          José David Quintero. Con laboratorio propio y tecnología 3D, diseñamos y fabricamos en la
+          clínica buena parte de lo que usa su tratamiento.
+        </p>
+        <ArrowLink href="/quienes-somos" tone="light" class="mt-8">
+          Conózcanos
+        </ArrowLink>
+      </div>
+    </div>
+  </section>
+
+  <!-- Especialidades -->
+  <section aria-labelledby="especialidades" class="pb-16 sm:pb-24">
+    <div class="container-page flex flex-wrap items-end justify-between gap-6">
+      <div>
+        <h2 id="especialidades" class="text-4xl sm:text-5xl">
+          Nuestras especialidades
+        </h2>
+        <p class="mt-3 max-w-lg text-lg text-ink-muted">
+          Tratamientos planificados para cada caso, con tecnología digital y laboratorio propio.
+        </p>
+      </div>
+      <ArrowLink href="/especialidades">Todas las especialidades</ArrowLink>
+    </div>
+
+    <ul
+      class="container-page mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 [scrollbar-width:thin]"
+      aria-label="Especialidades (deslice para ver más)"
+    >
+      {services.map((service) => (
+        <li class="w-[82%] shrink-0 snap-start sm:w-[45%] lg:w-[31%]">
+          <ServiceCard service={service} />
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- Cifras -->
+  <section aria-labelledby="cifras" class="container-page pb-16 sm:pb-24">
+    <h2 id="cifras" class="sr-only">
+      La clínica en cifras
+    </h2>
+    <div class="surface-dark rounded-[var(--radius-panel)] px-6 py-10 sm:px-12 sm:py-14">
+      <ul class="grid gap-y-8 sm:grid-cols-2 lg:grid-cols-4 lg:divide-x lg:divide-line-inverse">
+        {STATS.map((stat, index) => (
+          <li class="relative lg:px-8 lg:first:pl-0">
+            {index === 0 && (
+              <span aria-hidden="true" class="absolute top-1 right-0 flex -space-x-3 lg:right-8">
+                {clinic.doctors.map((doctor) => (
+                  <span class="grid size-12 place-items-center rounded-full border-2 border-ink bg-brand-300 font-bold text-ink">
+                    {initials(doctor.name)}
+                  </span>
+                ))}
+              </span>
+            )}
+            <div>
+              <p class="font-display text-5xl text-brand-300">{stat.value}</p>
+              <p class="mt-1 text-ink-inverse-muted">{stat.label}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- La diferencia -->
+  <section aria-labelledby="diferencia" class="container-page pb-16 sm:pb-24">
+    <div class="grid items-center gap-10 md:grid-cols-2 md:gap-16">
+      <div>
+        <h2 id="diferencia" class="text-4xl sm:text-5xl">
+          La diferencia <span class="italic">{clinic.brandMark}</span>
+        </h2>
+        <ul class="mt-10 grid gap-x-8 gap-y-8 sm:grid-cols-2">
+          {DIFFERENCE.map(({ Icon, title, text }) => (
+            <li class="reveal">
+              <span class="flex items-center gap-3">
+                <span class="grid size-11 shrink-0 place-items-center rounded-full bg-canvas-soft">
+                  <Icon aria-hidden="true" className="size-5" strokeWidth={1.75} />
+                </span>
+                <h3 class="text-lg">{title}</h3>
+              </span>
+              <p class="mt-2 text-ink-muted">{text}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <PhotoSlot label="la clínica por dentro" tone="dark" class="aspect-[4/3] md:aspect-[5/4]" />
+    </div>
+  </section>
+
+  <!-- Guías (el "blog" de la referencia) -->
+  <section aria-labelledby="guias" class="bg-canvas-soft py-16 sm:py-24">
+    <div class="container-page">
+      <div class="flex flex-wrap items-end justify-between gap-6">
+        <div>
+          <p class="eyebrow">Para pacientes de ortodoncia</p>
+          <h2 id="guias" class="mt-2 text-4xl sm:text-5xl">
+            Guías para cuidar su tratamiento
+          </h2>
+          <p class="mt-3 max-w-lg text-lg text-ink-muted">
+            Cómo cepillarse con brackets, qué comer y qué hacer si algo se rompe, explicado con
+            calma.
+          </p>
+        </div>
+        <ArrowLink href={GUIDES_BASE}>Ver todas las guías</ArrowLink>
+      </div>
+      <ol class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        {guides.slice(0, 3).map((guide, index) => (
+          <li class="[&_.card-soft]:bg-white [&_.card-soft]:[background-image:none]">
+            <GuideCard guide={guide} number={index + 1} />
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- Instagram -->
+  {instagramUrl && (
+    <section aria-labelledby="instagram" class="container-page py-16 text-center sm:py-24">
+      <InstagramIcon class="mx-auto size-8 text-brand-500" />
+      <h2 id="instagram" class="mt-4 text-3xl sm:text-4xl">
+        Síganos como <span class="italic">{clinic.instagram}</span>
+      </h2>
+      <p class="mx-auto mt-3 max-w-md text-ink-muted">
+        Consejos de cuidado y el día a día de la clínica.
+      </p>
+      <ArrowLink href={instagramUrl} external class="mt-8">
+        Ver Instagram
+      </ArrowLink>
+    </section>
+  )}
+
+  <!-- Texto para buscadores, plegado -->
+  <section aria-labelledby="sobre" class="container-page pb-16 sm:pb-24">
+    <details class="group card-soft p-6 sm:p-10">
+      <summary class="flex items-start justify-between gap-6">
+        <span>
+          <h2 id="sobre" class="text-2xl sm:text-3xl">
+            Clínica odontológica en Bucaramanga: ortodoncia y estética dental
+          </h2>
+          <span class="mt-2 block text-ink-muted">
+            {clinic.name}, en {clinic.address.neighborhood}.
+          </span>
+        </span>
+        <span class="mt-1 inline-flex shrink-0 items-center gap-1 font-bold underline decoration-1 underline-offset-4">
+          <span class="group-open:hidden">Ver más</span>
+          <span class="hidden group-open:inline">Ver menos</span>
+          <ChevronDown
+            aria-hidden="true"
+            className="size-5 transition-transform group-open:rotate-180"
+          />
+        </span>
+      </summary>
+      <div class="prose-plain mt-4 max-w-3xl">
+        <p>
+          En la {clinic.name} nos dedicamos a la ortodoncia y la estética dental. Atendemos con cita
+          previa, de lunes a sábado, en {clinic.address.street}, barrio{" "}
+          {clinic.address.neighborhood}, en {clinic.address.city}.
+        </p>
+        <h3 class="mt-6 text-xl">Ortodoncia con brackets y alineadores</h3>
+        <p>
+          Trabajamos con brackets convencionales, brackets de autoligado, el sistema Flow Jac y
+          alineadores transparentes AlineaPro, la marca propia de la clínica. En la valoración le
+          explicamos qué opción conviene en su caso.
+        </p>
+        <h3 class="mt-6 text-xl">Estética dental con planificación digital</h3>
+        <p>
+          El diseño de sonrisa digital, el microdiseño y los lentes cerámicos o de cerómero impresos
+          en 3D se planifican en la computadora antes de empezar, y se fabrican en nuestro
+          laboratorio.
+        </p>
+        <h3 class="mt-6 text-xl">Acompañamiento después de la cita</h3>
+        <p>
+          Nuestros pacientes de ortodoncia tienen guías gratuitas para cuidar sus brackets en casa:
+          cepillado, alimentos, kit de higiene y qué hacer ante una urgencia.
+        </p>
+      </div>
+    </details>
+  </section>
+</BaseLayout>

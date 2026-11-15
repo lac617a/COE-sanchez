@@ -1,0 +1,258 @@
+---
+import { Image } from "astro:assets";
+import {
+  ArrowDown,
+  ArrowUpRight,
+  BookOpenCheck,
+  MessageCircle,
+  Siren,
+  Smartphone,
+  Type,
+} from "lucide-react";
+
+import bracesPhoto from "@/assets/brand/ortodoncia-brackets.jpg";
+import GuideCard from "@/components/guides/GuideCard.astro";
+import { ArcLine, SmileCurve } from "@/components/illustrations/decor";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getGuides, GUIDES_BASE, guideUrl } from "@/lib/guides";
+import { breadcrumbJsonLd } from "@/lib/seo";
+import { site } from "@/lib/site";
+import { EMERGENCY_LINE } from "@/lib/urgency";
+
+const guides = await getGuides();
+
+/** Guías planeadas: se listan como "Próximamente" hasta que exista su página. */
+const PLANNED = [
+  { slug: "ligas", title: "Colores de ligas" },
+  { slug: "elasticos", title: "Elásticos" },
+  { slug: "alineadores", title: "Alineadores" },
+  { slug: "retenedores", title: "Retenedores" },
+  { slug: "citas", title: "Citas de control" },
+  { slug: "deportes", title: "Deportes e instrumentos" },
+  { slug: "mitos", title: "Mitos y preguntas" },
+];
+const published = new Set(guides.map((guide) => guide.data.slug));
+const upcoming = PLANNED.filter((guide) => !published.has(guide.slug));
+
+/** Datos clave de las guías (mismas cifras y fuentes que el MDX). */
+const KEY_FACTS = [
+  {
+    value: "2 min",
+    text: "Cepíllese durante al menos 2 minutos cada vez.",
+    href: guideUrl("cepillado"),
+    link: "Cómo cepillarse",
+  },
+  {
+    value: "3 a 5 días",
+    text: "Es normal sentir molestias al principio y después de cada cita de control.",
+    href: guideUrl("primeros-dias"),
+    link: "Primeros días",
+  },
+  {
+    value: "1 vez al día",
+    text: "Limpie bajo el arco con cepillo interdental e hilo dental, como mínimo.",
+    href: guideUrl("kit-de-higiene"),
+    link: "Su kit de higiene",
+  },
+  {
+    value: EMERGENCY_LINE,
+    text: "Línea de emergencias, solo si tiene sangrado que no para, un golpe fuerte o dificultad para respirar.",
+    href: guideUrl("urgencias"),
+    link: "Qué hacer en una urgencia",
+  },
+];
+
+const FEATURES = [
+  {
+    Icon: Smartphone,
+    title: "En su celular",
+    text: "Ábrala desde el código QR de la clínica, sin registrarse ni descargar nada.",
+  },
+  {
+    Icon: Type,
+    title: "Letra grande",
+    text: "Toque A+ en la parte de arriba para agrandar el texto.",
+  },
+  {
+    Icon: BookOpenCheck,
+    title: "Fuentes confiables",
+    text: "Basada en guías de asociaciones de ortodoncia como la AAO y la BOS.",
+  },
+  {
+    Icon: MessageCircle,
+    title: "Su clínica, cerca",
+    text: "Si tiene una duda o algo se rompe, escríbanos por WhatsApp.",
+  },
+];
+---
+
+<BaseLayout
+  title={`${site.guideProduct}: cuidados con brackets`}
+  description={site.guideDescription}
+  quickAccess
+  jsonLd={[
+    breadcrumbJsonLd([
+      { name: "Inicio", path: "/" },
+      { name: "Guías", path: GUIDES_BASE },
+    ]),
+  ]}
+>
+  <section class="container-page pt-3 sm:pt-5">
+    <div class="surface-dark relative isolate overflow-hidden rounded-[var(--radius-panel)] px-6 pt-12 pb-10 sm:px-10 md:grid md:grid-cols-[1.1fr_1fr] md:items-center md:gap-12 md:px-14 md:py-20">
+      <ArcLine className="pointer-events-none absolute -bottom-10 left-1/2 -z-10 w-[160%] max-w-none -translate-x-1/2 text-white/20 md:-bottom-24 md:w-[95%]" />
+      <div>
+        <p class="eyebrow">Guía para pacientes de ortodoncia</p>
+        <h1 class="mt-4 text-[2.75rem] italic sm:text-6xl lg:text-7xl">
+          Su ortodoncia, <span class="text-brand-300">bien cuidada</span>
+        </h1>
+        <p class="mt-6 max-w-md text-lg text-ink-inverse-muted">
+          Lo esencial para cuidar sus brackets en casa: cómo cepillarse, qué comer y qué hacer si
+          algo se rompe.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="#guias" class="btn btn-light">
+            Ver las guías
+            <ArrowDown aria-hidden="true" className="size-5" />
+          </a>
+          <a href={guideUrl("urgencias")} class="btn btn-outline-light">
+            <Siren aria-hidden="true" className="size-5" />
+            Tengo una urgencia
+          </a>
+        </div>
+      </div>
+      <div class="mt-12 md:mt-0">
+        <figure class="overflow-hidden rounded-[1.4rem] bg-white p-1 shadow-[0_30px_60px_-20px_rgb(0_0_0/0.5)]">
+          <div class="relative overflow-hidden rounded-[1.15rem]">
+            <Image
+              src={bracesPhoto}
+              alt="Sonrisa con brackets: el arco pasa por los brackets y una liga rosada sujeta el arco."
+              widths={[480, 800, 1000]}
+              sizes="(max-width: 767px) calc(100vw - 5rem), (max-width: 1200px) 42vw, 500px"
+              loading="eager"
+              class="h-auto w-full contrast-[1.03] saturate-[0.85]"
+            />
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 1800 857"
+              preserveAspectRatio="none"
+              class="pointer-events-none absolute inset-0 h-full w-full fill-none stroke-white [filter:drop-shadow(0_1px_3px_rgb(0_0_0/0.9))]"
+              stroke-width="6"
+            >
+              <path
+                d="M 500 170 C 545 195, 530 265, 600 331 M 950 170 C 905 210, 910 325, 827 407 M 1360 700 C 1325 620, 1190 590, 1100 478"
+                stroke-dasharray="16 15"
+                stroke-linecap="round"
+              ></path>
+              <circle cx="600" cy="331" r="13"></circle>
+              <circle cx="827" cy="407" r="13"></circle>
+              <circle cx="1100" cy="478" r="13"></circle>
+            </svg>
+            <span
+              aria-hidden="true"
+              class="absolute top-[9%] left-[20%] rounded-full bg-ink px-2 py-0.5 text-xs font-bold text-white sm:text-sm"
+            >
+              Liga
+            </span>
+            <span
+              aria-hidden="true"
+              class="absolute top-[9%] left-[46%] rounded-full bg-ink px-2 py-0.5 text-xs font-bold text-white sm:text-sm"
+            >
+              Bracket
+            </span>
+            <span
+              aria-hidden="true"
+              class="absolute right-[15%] bottom-[10%] rounded-full bg-ink px-2 py-0.5 text-xs font-bold text-white sm:text-sm"
+            >
+              Arco
+            </span>
+          </div>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="container-text py-16 text-center sm:py-24">
+    <h2 class="text-4xl sm:text-5xl">Lo que necesita saber, explicado con calma</h2>
+    <SmileCurve className="mx-auto mt-5 h-5 w-36 text-brand-400" />
+    <p class="mt-6 text-lg text-ink-muted">
+      Guías cortas, con dibujos y en palabras sencillas, preparadas por su clínica para acompañarle
+      entre cita y cita. Léalas en su celular cuando las necesite.
+    </p>
+  </section>
+
+  <section id="guias" aria-labelledby="guias-titulo" class="container-page pb-16 sm:pb-24">
+    <p class="eyebrow">Guías</p>
+    <h2 id="guias-titulo" class="mt-2 text-4xl sm:text-5xl">
+      Sus guías de cuidado
+    </h2>
+    <p class="mt-3 max-w-lg text-lg text-ink-muted">
+      Empiece por los primeros días y vuelva a las demás cuando las necesite.
+    </p>
+
+    <ol class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      {guides.map((guide, index) => (
+        <li class:list={[index === 0 && "md:col-span-2"]}>
+          <GuideCard guide={guide} number={index + 1} featured={index === 0} />
+        </li>
+      ))}
+    </ol>
+
+    {upcoming.length > 0 && (
+      <div class="mt-10 flex flex-wrap items-center gap-2">
+        <p class="mr-2 font-bold">Próximamente:</p>
+        {upcoming.map((guide) => (
+          <span class="rounded-full border border-line px-4 py-1.5 text-base text-ink-muted">
+            {guide.title}
+          </span>
+        ))}
+      </div>
+    )}
+  </section>
+
+  <section aria-labelledby="recordar" class="container-page pb-16 sm:pb-24">
+    <div class="surface-dark rounded-[var(--radius-panel)] px-6 py-12 sm:px-12 sm:py-16">
+      <div class="grid gap-10 lg:grid-cols-[1fr_2fr] lg:gap-16">
+        <div>
+          <p class="eyebrow">Para recordar</p>
+          <h2 id="recordar" class="mt-3 text-4xl sm:text-5xl">
+            Cuatro datos que conviene tener presentes
+          </h2>
+        </div>
+        <ul class="grid gap-x-10 gap-y-8 sm:grid-cols-2">
+          {KEY_FACTS.map((fact) => (
+            <li class="border-t border-line-inverse pt-5">
+              <p class="font-display text-5xl text-brand-300">{fact.value}</p>
+              <p class="mt-3 text-ink-inverse-muted">{fact.text}</p>
+              <a href={fact.href} class="mt-3 inline-flex min-h-tap items-center gap-1 font-bold">
+                {fact.link}
+                <ArrowUpRight aria-hidden="true" className="size-4" />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="como-usar" class="container-page pb-16 sm:pb-24">
+    <div class="grid gap-10 lg:grid-cols-[1fr_2fr] lg:gap-16">
+      <div>
+        <p class="eyebrow">Cómo usarla</p>
+        <h2 id="como-usar" class="mt-3 text-4xl sm:text-5xl">
+          Pensada para usted
+        </h2>
+      </div>
+      <ul class="grid gap-4 sm:grid-cols-2">
+        {FEATURES.map(({ Icon, title, text }) => (
+          <li class="card-soft p-6">
+            <span class="grid size-12 place-items-center rounded-2xl bg-white">
+              <Icon aria-hidden="true" className="size-6" strokeWidth={1.75} />
+            </span>
+            <h3 class="mt-4 text-lg">{title}</h3>
+            <p class="mt-1 text-ink-muted">{text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

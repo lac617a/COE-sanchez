@@ -1,0 +1,60 @@
+---
+import PageHero from "@/components/landing/PageHero.astro";
+import ServiceCard from "@/components/landing/ServiceCard.astro";
+import { CATEGORIES, servicesByCategory } from "@/data/services";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { clinic } from "@/lib/content";
+import { breadcrumbJsonLd } from "@/lib/seo";
+
+import type { ServiceCategory } from "@/data/services";
+
+const categories = Object.entries(CATEGORIES) as Array<
+  [ServiceCategory, (typeof CATEGORIES)[ServiceCategory]]
+>;
+---
+
+<BaseLayout
+  title="Especialidades"
+  description={`Ortodoncia invisible, brackets, diseño de sonrisa, lentes dentales y odontología especializada en Bucaramanga. Especialidades de la ${clinic.shortName}.`}
+  headerVariant="dark"
+  jsonLd={[
+    breadcrumbJsonLd([
+      { name: "Inicio", path: "/" },
+      { name: "Especialidades", path: "/especialidades" },
+    ]),
+  ]}
+>
+  <PageHero
+    title="Especialidades"
+    crumbs={[{ name: "Inicio", href: "/" }, { name: "Especialidades" }]}
+  >
+    <p>
+      Tratamientos de ortodoncia y estética dental planificados con tecnología digital, y atención
+      general y especializada para toda la boca.
+    </p>
+  </PageHero>
+
+  {categories.map(([id, category], index) => (
+    <section
+      aria-labelledby={`cat-${id}`}
+      class:list={["container-page", index === 0 ? "pt-16 sm:pt-24" : "pt-4", "pb-12 sm:pb-16"]}
+    >
+      <div class="grid gap-6 border-t border-line pt-10 lg:grid-cols-[1fr_2fr] lg:gap-16">
+        <div>
+          <p class="font-display text-xl text-brand-600">{String(index + 1).padStart(2, "0")}</p>
+          <h2 id={`cat-${id}`} class="mt-2 text-4xl sm:text-5xl">
+            {category.title}
+          </h2>
+          <p class="mt-3 max-w-sm text-lg text-ink-muted">{category.lead}</p>
+        </div>
+        <ul class="grid gap-5 sm:grid-cols-2">
+          {servicesByCategory(id).map((service) => (
+            <li>
+              <ServiceCard service={service} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  ))}
+</BaseLayout>

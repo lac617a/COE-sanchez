@@ -1,0 +1,59 @@
+---
+import { ArrowUpRight } from "lucide-react";
+
+import { GuideArt } from "@/components/illustrations/guide-art";
+import { guideUrl } from "@/lib/guides";
+
+import type { Guide } from "@/lib/guides";
+
+/** Tarjeta de guía: toda la tarjeta es el enlace (enlace estirado sobre el título). */
+type Props = { guide: Guide; number: number; featured?: boolean };
+
+const { guide, number, featured = false } = Astro.props;
+const { slug, title, lead } = guide.data;
+---
+
+<article
+  class:list={[
+    "card-soft group relative flex h-full flex-col p-6 transition-shadow hover:shadow-[var(--shadow-soft)] sm:p-8",
+    featured && "md:flex-row md:items-center md:gap-10",
+  ]}
+>
+  <div
+    class:list={[
+      "grid place-items-center rounded-[1.25rem] bg-white py-6",
+      featured ? "md:order-2 md:w-2/5 md:py-10" : "mb-6",
+    ]}
+  >
+    <GuideArt
+      slug={slug}
+      decorative
+      className={`parallax size-24 [--parallax:0.75rem] ${featured ? "md:size-36" : ""}`}
+    />
+  </div>
+  <div class="flex flex-1 flex-col">
+    <div class="flex items-center gap-3">
+      <span class="font-display text-xl text-brand-600">{String(number).padStart(2, "0")}</span>
+      {featured && (
+        <span class="rounded-full bg-ink px-3 py-0.5 text-sm font-bold text-white">
+          Empiece aquí
+        </span>
+      )}
+    </div>
+    <h3 class:list={["mt-3 text-xl", featured && "md:font-display md:text-4xl md:font-normal"]}>
+      <a
+        href={guideUrl(slug)}
+        class="no-underline after:absolute after:inset-0 after:rounded-[var(--radius-card)] after:content-['']"
+      >
+        {title}
+      </a>
+    </h3>
+    {lead && <p class="mt-2 text-ink-muted">{lead}</p>}
+    <span aria-hidden="true" class="mt-auto inline-flex items-center gap-2 pt-6 font-bold">
+      <span class="grid size-10 place-items-center rounded-full border border-ink/25 bg-white transition-colors group-hover:bg-ink group-hover:text-white">
+        <ArrowUpRight className="size-5" />
+      </span>
+      Leer la guía
+    </span>
+  </div>
+</article>

@@ -1,0 +1,64 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { clinic } from "@/lib/content";
+
+// Mantener sincronizado con CREDITS.md.
+const CREDITS = [
+  {
+    name: "Ilustraciones de dientes, brackets, cepillos y alimentos",
+    author: "Equipo de la guía",
+    license: "Propias",
+  },
+  {
+    name: "Fotografía de brackets",
+    author: "Proporcionada por la clínica; autor por confirmar",
+    license: "Permiso por confirmar",
+  },
+  {
+    name: "Nunito Sans (tipografía del texto)",
+    author: "Vernon Adams, Jacques Le Bailly, Manvel Shmavonyan y Alexei Vanyashin",
+    license: "SIL Open Font License 1.1",
+    url: "https://fonts.google.com/specimen/Nunito+Sans",
+  },
+  {
+    name: "DM Serif Display (tipografía de títulos)",
+    author: "Colophon Foundry",
+    license: "SIL Open Font License 1.1",
+    url: "https://fonts.google.com/specimen/DM+Serif+Display",
+  },
+  {
+    name: "Lucide (iconos)",
+    author: "Lucide Contributors",
+    license: "ISC",
+    url: "https://lucide.dev/license",
+  },
+];
+---
+
+<BaseLayout
+  title="Créditos de imágenes, iconos y tipografía"
+  description={`Licencias y atribuciones de las ilustraciones, iconos y tipografías que usa el sitio de la ${clinic.name}.`}
+>
+  <div class="container-text space-y-6 py-10">
+    <h1 class="text-4xl">Créditos</h1>
+    <p class="text-ink-muted">Estos son los recursos gráficos que usamos y sus licencias.</p>
+    <ul class="space-y-4">
+      {CREDITS.map((credit) => (
+        <li class="card-soft p-5">
+          <p class="font-bold">
+            {credit.url ? (
+              <a href={credit.url} rel="noopener noreferrer" target="_blank">
+                {credit.name}
+              </a>
+            ) : (
+              credit.name
+            )}
+          </p>
+          <p class="text-base text-ink-muted">
+            {credit.author} · {credit.license}
+          </p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</BaseLayout>
