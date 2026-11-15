@@ -5,87 +5,205 @@ import { Redo2, Undo2 } from "lucide-react";
 import type { ImageMetadata } from "astro";
 
 /**
- * Carrusel de la portada, como el de la referencia: un círculo de línea fina, una foto
- * con forma de arco y dos flechas blancas sobre el círculo. Sin JavaScript se ve la primera.
+ * Rueda de fotos de la portada, como la de la referencia: 4 fotos en forma de arco
+ * (54 px arriba, redondas abajo) colocadas arriba, a la derecha, abajo y a la izquierda
+ * de una rueda. Solo se ve la de arriba; la portada recorta el resto, que asoma por abajo.
+ * Las flechas giran la rueda un cuarto de vuelta (0,55 s). Detrás, un círculo de línea
+ * fina centrado en el borde inferior.
  */
 type Slide = {
   src: ImageMetadata;
   alt: string;
-  fit?: "cover" | "contain";
-  /** Encuadre (object-position) para recortar la foto dentro del arco. */
+  /** Encuadre (object-position) dentro del arco. */
   position?: string;
 };
 type Props = { slides: Slide[] };
 
-const { slides } = Astro.props;
+// La rueda tiene 4 puestos: si hay menos fotos, se repiten.
+const slots = Array.from(
+  { length: 4 },
+  (_, index) => Astro.props.slides[index % Astro.props.slides.length],
+);
 ---
 
-<div
-  class="relative mx-auto aspect-square w-full max-w-[26rem] md:max-w-[30rem]"
-  data-hero-carousel
->
-  <!-- Círculo de línea fina -->
-  <div aria-hidden="true" class="absolute inset-0 rounded-full border border-white/70"></div>
+<div class="hero-wheel" data-hero-wheel>
+  <span aria-hidden="true" class="wheel-circle"></span>
 
-  <!-- Fotos con forma de arco (esquinas de 54 px arriba y redondas abajo) -->
-  <div class="absolute inset-x-[18%] top-[12%] bottom-[6%] overflow-hidden rounded-t-[3.4rem] rounded-b-[25rem] bg-white shadow-[0_30px_60px_-25px_rgb(0_0_0/0.8)]">
-    {slides.map((slide, index) => (
+  <div class="wheel-ring" data-ring>
+    {slots.map((slide, index) => (
       <Image
         src={slide.src}
         alt={slide.alt}
-        widths={[360, 600, 800].filter((width) => width <= slide.src.width)}
-        sizes="(min-width: 768px) 22rem, 70vw"
+        widths={[400, 600, 900].filter((width) => width <= slide.src.width)}
+        sizes="(min-width: 1024px) 35rem, (min-width: 768px) 30rem, 15rem"
         loading={index === 0 ? "eager" : "lazy"}
-        data-slide={index}
-        style={{ objectPosition: slide.position ?? "50% 50%" }}
+        class="wheel-card"
+        style={{ "--slot": index, objectPosition: slide.position ?? "50% 50%" }}
         aria-hidden={index === 0 ? undefined : "true"}
-        class:list={[
-          "absolute inset-0 h-full w-full transition-opacity duration-500",
-          slide.fit === "contain" ? "object-contain p-8" : "object-cover",
-          index === 0 ? "opacity-100" : "opacity-0",
-        ]}
+        data-card
       />
     ))}
   </div>
 
-  {slides.length > 1 && (
-    <>
-      <button
-        type="button"
-        data-dir="-1"
-        class="absolute top-[22%] left-[6%] grid size-11 place-items-center rounded-full bg-white text-ink shadow-md transition-transform hover:scale-105"
-      >
-        <Undo2 aria-hidden="true" className="size-4" />
-        <span class="sr-only">Foto anterior</span>
-      </button>
-      <button
-        type="button"
-        data-dir="1"
-        class="absolute top-[22%] right-[6%] grid size-11 place-items-center rounded-full bg-white text-ink shadow-md transition-transform hover:scale-105"
-      >
-        <Redo2 aria-hidden="true" className="size-4" />
-        <span class="sr-only">Foto siguiente</span>
-      </button>
-    </>
-  )}
+  <div class="wheel-arrows">
+    <button type="button" class="wheel-arrow" data-dir="-1">
+      <Undo2 aria-hidden="true" className="size-[1.125rem]" />
+      <span class="sr-only">Foto anterior</span>
+    </button>
+    <button type="button" class="wheel-arrow" data-dir="1">
+      <Redo2 aria-hidden="true" className="size-[1.125rem]" />
+      <span class="sr-only">Foto siguiente</span>
+    </button>
+  </div>
 </div>
 
+<style>
+  /* Medidas de la referencia: celular, tableta (≤ 1024 px) y escritorio. */
+  .hero-wheel {
+    --card-w: 15rem;
+    --card-h: 11.5rem;
+    --radius: 13rem; /* del centro de la rueda al centro de cada foto */
+    --top: 0.5rem;
+    --height: 19rem; /* alto visible antes del borde de la portada */
+    --circle: 17rem;
+    --arrow: 2.75rem;
+    --arrow-y: 8.5rem;
+    --arrow-x: 7.5rem;
+
+    position: relative;
+    height: var(--height);
+  }
+
+  @media (min-width: 768px) {
+    .hero-wheel {
+      --card-w: 30rem;
+      --card-h: 17.5rem;
+      --radius: 22rem;
+      --top: 1.25rem;
+      --height: 26.25rem;
+      --circle: 32.5rem;
+      --arrow: 3.125rem;
+      --arrow-y: 12.5rem;
+      --arrow-x: 7.2rem;
+    }
+  }
+
+  @media (min-width: 1025px) {
+    .hero-wheel {
+      --card-w: 35rem;
+      --card-h: 25rem;
+      --radius: 31rem;
+      --top: 3.125rem;
+      --height: 34.375rem;
+      --arrow: 3.75rem;
+      --arrow-y: 18.125rem;
+      --arrow-x: 11.875rem;
+    }
+  }
+
+  .wheel-circle {
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    width: var(--circle);
+    aspect-ratio: 1;
+    translate: -50% -50%;
+    border: 1px solid #fff;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  /* Centro de la rueda: debajo de la foto de arriba, a una distancia igual al radio. */
+  .wheel-ring {
+    position: absolute;
+    left: 50%;
+    top: calc(var(--top) + var(--card-h) / 2 + var(--radius));
+    width: 0;
+    height: 0;
+    z-index: 1;
+    rotate: var(--turn, 0deg);
+    transition: rotate 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .wheel-card {
+    position: absolute;
+    left: calc(var(--card-w) / -2);
+    top: calc(var(--card-h) / -2);
+    width: var(--card-w);
+    height: var(--card-h);
+    max-width: none;
+    object-fit: cover;
+    border-radius: 54px 54px 400px 400px;
+    /* Cada foto en su puesto: 0 arriba, 1 derecha, 2 abajo, 3 izquierda, mirando hacia fuera. */
+    transform: rotate(calc(var(--slot) * 90deg)) translateY(calc(var(--radius) * -1));
+    user-select: none;
+  }
+
+  .wheel-arrows {
+    position: absolute;
+    left: 50%;
+    top: var(--arrow-y);
+    z-index: 2;
+    display: flex;
+    gap: calc(var(--arrow-x) * 2 - var(--arrow));
+    translate: -50% 0;
+  }
+
+  .wheel-arrow {
+    display: grid;
+    place-items: center;
+    width: var(--arrow);
+    height: var(--arrow);
+    border-radius: 50%;
+    background: #fff;
+    color: #040006;
+    cursor: pointer;
+    transition:
+      background 0.2s,
+      color 0.2s;
+  }
+
+  .wheel-arrow:hover,
+  .wheel-arrow:focus-visible {
+    background: #040006;
+    color: #fff;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wheel-ring {
+      transition: none;
+    }
+  }
+</style>
+
 <script>
-  for (const root of document.querySelectorAll<HTMLElement>("[data-hero-carousel]")) {
-    const slides = [...root.querySelectorAll<HTMLElement>("[data-slide]")];
-    let current = 0;
-    const show = (next: number) => {
-      current = (next + slides.length) % slides.length;
-      slides.forEach((slide, index) => {
-        const active = index === current;
-        slide.classList.toggle("opacity-100", active);
-        slide.classList.toggle("opacity-0", !active);
-        if (active) slide.removeAttribute("aria-hidden");
-        else slide.setAttribute("aria-hidden", "true");
+  for (const root of document.querySelectorAll<HTMLElement>("[data-hero-wheel]")) {
+    const ring = root.querySelector<HTMLElement>("[data-ring]")!;
+    const cards = [...root.querySelectorAll<HTMLElement>("[data-card]")];
+    let turn = 0; // cuartos de vuelta acumulados (no se reinicia: siempre gira hacia el mismo lado)
+    let busy = false;
+
+    const update = () => {
+      ring.style.setProperty("--turn", `${turn * 90}deg`);
+      // La foto de arriba es la del puesto que quedó en 0°.
+      const front = ((-turn % 4) + 4) % 4;
+      cards.forEach((card, index) => {
+        if (index === front) card.removeAttribute("aria-hidden");
+        else card.setAttribute("aria-hidden", "true");
       });
     };
+
     root.querySelectorAll<HTMLButtonElement>("[data-dir]").forEach((button) => {
-      button.addEventListener("click", () => show(current + Number(button.dataset.dir)));
+      button.addEventListener("click", () => {
+        if (busy) return;
+        busy = true;
+        // "Siguiente" gira en sentido horario: la de arriba sale por la derecha
+        // y entra la de la izquierda, como en la referencia.
+        turn += Number(button.dataset.dir);
+        update();
+        window.setTimeout(() => (busy = false), 580);
+      });
     });
+    update();
   }
 </script>

@@ -312,7 +312,7 @@
 
   /* Portada a todo el ancho con la textura de luz (public/images/hero-bg.webp). */
   .hero-surface {
-    @apply relative isolate overflow-hidden text-white;
+    @apply relative isolate overflow-clip text-white;
     background:
       linear-gradient(90deg, rgb(0 0 0 / 0.35), transparent 55%),
       #050505 url("/images/hero-bg.webp") center / cover no-repeat;

@@ -81,17 +81,16 @@ function initials(name: string): string {
           Conozca más
         </ArrowLink>
       </div>
-      <div class="self-end overflow-hidden pt-4 md:pt-10">
-        <div class="translate-y-[10%]">
-          <HeroCarousel
-            slides={[
-              PHOTOS.pacienteOrtodoncia,
-              PHOTOS.sonrisaEstetica,
-              PHOTOS.pacienteEstetica,
-              PHOTOS.brackets,
-            ]}
-          />
-        </div>
+      <!-- La rueda llega hasta el borde inferior: la portada recorta las fotos de abajo. -->
+      <div class="self-end">
+        <HeroCarousel
+          slides={[
+            PHOTOS.pacienteOrtodoncia,
+            PHOTOS.sonrisaEstetica,
+            PHOTOS.pacienteEstetica,
+            PHOTOS.brackets,
+          ]}
+        />
       </div>
     </div>
   </section>
@@ -203,7 +202,7 @@ function initials(name: string): string {
   <!-- Especialidades: carrusel sobre medio círculo de línea fina, como la referencia -->
   <section
     aria-labelledby="especialidades"
-    class="relative isolate overflow-hidden bg-[#fbfbfb] pt-10 pb-20 sm:pt-14 sm:pb-28"
+    class="relative isolate overflow-clip bg-[#fbfbfb] pt-10 pb-20 sm:pt-14 sm:pb-28"
   >
     <svg
       aria-hidden="true"
@@ -304,7 +303,7 @@ function initials(name: string): string {
   </section>
 
   <!-- AlineaPro (en la referencia: convenios corporativos) -->
-  <section aria-labelledby="alineapro" class="relative isolate overflow-hidden pb-16 sm:pb-24">
+  <section aria-labelledby="alineapro" class="relative isolate overflow-clip pb-16 sm:pb-24">
     <ArcLine className="pointer-events-none absolute top-0 -left-40 -z-10 w-[42rem] max-w-none text-ink/25" />
     <div class="container-page">
       <div class="mx-auto grid max-w-[53rem] items-center gap-10 md:grid-cols-2 md:gap-12">

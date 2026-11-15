@@ -13,7 +13,7 @@ Las rutas antiguas de la guía (`/cepillado`, `/urgencias`…) redirigen a `/gui
 
 **Referencia visual:** [coedental.pe](https://coedental.pe/). La landing sigue su diseño y su orden de secciones lo más fielmente posible. **Nunca** se copian sus textos, fotos, cifras ni testimonios.
 
-- **Portada:** textura de luz (`public/images/hero-bg.webp`) y titular en DM Serif cursiva. A la derecha va un carrusel circular con fotos en forma de arco (`HeroCarousel`).
+- **Portada:** textura de luz (`public/images/hero-bg.webp`) y titular en DM Serif cursiva. A la derecha va una rueda de 4 fotos en forma de arco que gira un cuarto de vuelta con las flechas (`HeroCarousel`). Las secciones que recortan contenido usan `overflow: clip`, no `hidden`: con `hidden`, el foco de un botón desplaza la sección.
 - **Cabecera:** logo y botón de menú, que abre un menú lateral blanco. Es transparente sobre las portadas oscuras.
 - **Títulos de sección:** Nunito Sans negrita de 32 px (`.section-title`). La serif solo se usa en los titulares grandes (`.display-title`) y en el pie.
 - **Texto base:** 16 px en la landing y 18 px en las guías (`data-area="guias"` en `<html>`).

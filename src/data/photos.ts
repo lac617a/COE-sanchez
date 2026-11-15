@@ -34,7 +34,7 @@ export const PHOTOS = {
   pacienteEstetica: {
     src: pacienteEstetica,
     alt: "Paciente de la clínica sonriendo después de su tratamiento de estética dental.",
-    position: "50% 60%",
+    position: "50% 72%",
   },
   sonrisaEstetica: {
     src: sonrisaEstetica,
