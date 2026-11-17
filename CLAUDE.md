@@ -4,7 +4,7 @@
 
 ## Qué es este proyecto
 
-Sitio web completo de la **Clínica Odontológica Sánchez Quintero** (marca del logo: COE Dental), Calle 33 # 28-18, La Aurora, Bucaramanga. Una sola web en Astro con:
+Sitio web completo de la **Clínica Odontológica Sánchez Quintero** (marca del logo: COE Dental), Calle 33 # 28-22, La Aurora, Bucaramanga. Una sola web en Astro con:
 
 - **Landing de la clínica:** `/`, `/quienes-somos`, `/especialidades` y `/especialidades/[slug]`.
 - **Guía de ortodoncia para pacientes** (antes un proyecto Next.js aparte, en `../guia`): `/guias` y `/guias/[slug]`. El paciente llega escaneando un código QR en la clínica.
